@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import dynamic from "next/dynamic";
+import dynamic from "next/dynamic";
 import CryptoJS from "crypto-js";
-import Spinner from "../components/Spinner";
+
+// Dynamically import Spinner component
+const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
 const SECRET_KEY = "your-secret-key";
 
@@ -16,13 +18,15 @@ const Game = () => {
   const [searchParams, setSearchParams] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsClient(true);
+    if (typeof window !== "undefined") {
+      setIsClient(true);
 
-    // Dynamically import `useSearchParams` since it relies on `window`
-    import("next/navigation").then((mod) => {
-      const params = mod.useSearchParams();
-      setSearchParams(params.get("data"));
-    });
+      // Dynamically import `useSearchParams` since it relies on `window`
+      import("next/navigation").then((mod) => {
+        const params = mod.useSearchParams();
+        setSearchParams(params.get("data"));
+      });
+    }
   }, []);
 
   useEffect(() => {
