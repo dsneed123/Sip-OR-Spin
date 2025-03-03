@@ -144,7 +144,7 @@ const Game = () => {
             { option: "Password Game" }, //password game
             { option: "Trivia" }, //must get 5 questions right
             { option: "Speed Math" }, // elementary school style
-            { option: "pong shot" }, //pong trick shot
+            { option: "pong shot" }, //pong trick shot. 3 attempts to make. if made everyone else drinks
             { option: "Drunk Spelling Bee" },
             { option: "Stand on one foot 20 seconds." }, //close your eyes and everyone has to drink if you pass
             {option: "Shot or not"} //one water shot one normal shot. 

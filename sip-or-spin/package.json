@@ -2,11 +2,14 @@
   "name": "sip-or-spin",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dsneed123.github.io/Sip-OR-Spin",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "predeploy": "npm run build && next export",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -21,7 +24,8 @@
     "next": "15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.2.0"
+    "react-router-dom": "^7.2.0",
+    "gh-pages": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
