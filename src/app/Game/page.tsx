@@ -16,6 +16,7 @@ const Game = () => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [turnResult, setTurnResult] = useState<null | string>(null);
   const [showPassMessage, setShowPassMessage] = useState(false);
+  const [showSpeedMathPopup, setShowSpeedMathPopup] = useState(false);
 
   useEffect(() => {
     const encryptedData = searchParams.get("data");
@@ -37,30 +38,47 @@ const Game = () => {
     }
   }, [searchParams]); // No need for isClient check
 
-  const handleSpinResult = (result: boolean) => {
+  // const handleSpinResult = (result: boolean) => {
+  //   const currentPlayer = players[currentPlayerIndex];
+
+  //   if (result) {
+  //     setScores((prevScores) => ({
+  //       ...prevScores,
+  //       [currentPlayer]: prevScores[currentPlayer] + 1,
+  //     }));
+  //     setTurnResult("You gained points!");
+  //   } else {
+  //     setScores((prevScores) => ({
+  //       ...prevScores,
+  //       [currentPlayer]: prevScores[currentPlayer] + 1,
+  //     }));
+  //     setTurnResult("Pass");
+  //     setShowPassMessage(true);
+  //     setTimeout(() => setShowPassMessage(false), 1500);
+  //   }
+
+  //   const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
+  //   setCurrentPlayerIndex(nextPlayerIndex);
+  // };
+
+  const handleSpinResult = (selectedOption: string) => {
     const currentPlayer = players[currentPlayerIndex];
 
-    if (result) {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1,
-      }));
-      setTurnResult("You gained points!");
-    } else {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1,
-      }));
-      setTurnResult("Pass");
-      setShowPassMessage(true);
-      setTimeout(() => setShowPassMessage(false), 1500);
+    if(selectedOption === "Speed Mmath") {
+      setShowSpeedMathPopup(true);
     }
+
+    setScores((prevScores) => ({
+      ...prevScores,
+      [currentPlayer]: prevScores[currentPlayer] + 1,
+    }));
+
+    setTurnResult(selectedOption);
 
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
-  };
-
-  const handleSpin = (result: boolean) => {
+  }
+  const handleSpin = (result: string) => {
     handleSpinResult(result);
   };
 
@@ -122,6 +140,49 @@ const Game = () => {
         </div>
       )}
 
+      {showSpeedMathPopup && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000, // Ensures it stays on top
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+              }}
+            >
+              <h2>Speed Math Challenge!</h2>
+              <p>Get ready for a fast-paced math question!</p>
+              <button
+                onClick={() => setShowSpeedMathPopup(false)}
+                style={{
+                  marginTop: "10px",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  backgroundColor: "#caa15d",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
       <div
         style={{
           position: "absolute",
@@ -150,6 +211,10 @@ const Game = () => {
       </div>
     </div>
   );
+
+  
 };
+
+
 
 export default Game;
