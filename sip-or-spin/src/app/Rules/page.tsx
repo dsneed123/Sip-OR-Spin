@@ -3,13 +3,13 @@ const rules = () => {
     return (
         <>
             <div>
-                <h1 style={{ fontSize: '50px', textAlign: 'center' }}>Rules</h1>
+                <h1 className="pt-5 pb-10 text-5xl text-center">Rules</h1>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <div style={{ alignItems: 'stretch', flex: 1, backgroundColor: 'black' }}>
-                    <p style= {{ color: 'white' }}>div1</p>
+            <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center'}}>
+                <div className="flex-1 bg-[#FFECDC] rounded-3xl pt-50 pb-50 pr-150 pl-150">
+                    <p>div1</p>
                 </div>
-                <div style= {{ alignItems: 'stretch', flex: 2, backgroundColor: 'pink' }}>
+                <div className="flex-1 bg-[#FFECDC] rounded-3xl pt-50 pb-50 pr-150 pl-150">
                     <p>div2</p>
                 </div>
             </div>
