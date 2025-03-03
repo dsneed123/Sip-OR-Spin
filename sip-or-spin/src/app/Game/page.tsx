@@ -136,14 +136,19 @@ const Game = () => {
       >
         <Spinner
           data={[
-            { option: "finish the lyric" },
-            { option: "challenge" },
-            { option: "shots/finish drink" },
-            { option: "truth or dare" },
-            { option: "sip" },
-            { option: "spin again" },
-            { option: "truth" },
-            { option: "player's choice" },
+            { option: "finish the lyric" }, //finish the lyric
+            { option: "Community Shot" }, //community each adds ingredients to a shot
+            { option: "Community Drink" }, //community each adds ingredients to a drink
+            { option: "shots/finish drink" },//shots or finish drink
+            { option: "Wordl" }, //wordl
+            { option: "Password Game" }, //password game
+            { option: "Trivia" }, //must get 5 questions right
+            { option: "Speed Math" }, // elementary school style
+            { option: "pong shot" }, //pong trick shot
+            { option: "Drunk Spelling Bee" },
+            { option: "Stand on one foot 20 seconds." }, //close your eyes and everyone has to drink if you pass
+            {option: "Shot or not"} //one water shot one normal shot. 
+
           ]}
           onSpin={handleSpin}
         />
