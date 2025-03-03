@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react-custom-roulette": "^1.4.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
