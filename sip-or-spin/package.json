@@ -11,7 +11,6 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@heroui/slider": "^2.4.12",
     "@heroui/system": "^2.4.11",
     "@heroui/theme": "^2.4.11",
     "@mui/icons-material": "^6.4.6",
