@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import CryptoJS from "crypto-js";
@@ -7,8 +8,8 @@ import Spinner from "../components/Spinner";
 const SECRET_KEY = "your-secret-key";
 
 const Game = () => {
-  const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
+  const searchParams = isClient ? useSearchParams() : null;
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -20,7 +21,7 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !searchParams) return;
 
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
@@ -30,13 +31,10 @@ const Game = () => {
         const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
         setPlayers(decryptedData);
-        const initialScores = decryptedData.reduce(
-          (acc: { [key: string]: number }, player: string) => {
-            acc[player] = 0;
-            return acc;
-          },
-          {}
-        );
+        const initialScores = decryptedData.reduce((acc: { [key: string]: number }, player: string) => {
+          acc[player] = 0;
+          return acc;
+        }, {});
         setScores(initialScores);
       } catch (error) {
         console.error("Error decrypting data:", error);
@@ -46,25 +44,25 @@ const Game = () => {
 
   const handleSpinResult = (result: boolean) => {
     const currentPlayer = players[currentPlayerIndex];
-    if (result) {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1,
-      }));
-      setTurnResult("You gained points!");
-    } else {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1,
-      }));
-      setTurnResult("Pass");
+    setScores((prevScores) => ({
+      ...prevScores,
+      [currentPlayer]: prevScores[currentPlayer] + 1,
+    }));
+    setTurnResult(result ? "You gained points!" : "Pass");
+
+    if (!result) {
       setShowPassMessage(true);
       setTimeout(() => setShowPassMessage(false), 1500);
     }
-    setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+
+    setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
   };
 
-  if (!isClient) return null;
+  const handleSpin = (result: boolean) => {
+    handleSpinResult(result);
+  };
+
+  if (!isClient) return null; // Prevent SSR errors
 
   return (
     <div style={{ position: "relative", height: "100vh" }}>
@@ -88,6 +86,7 @@ const Game = () => {
           ))}
         </ul>
       </div>
+
       <div
         style={{
           position: "absolute",
@@ -98,10 +97,9 @@ const Game = () => {
         }}
       >
         <h2>It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
-        {turnResult && (
-          <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>{turnResult}</h3>
-        )}
+        {turnResult && <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>{turnResult}</h3>}
       </div>
+
       {showPassMessage && (
         <div
           style={{
@@ -119,6 +117,7 @@ const Game = () => {
           PASS
         </div>
       )}
+
       <div
         style={{
           position: "absolute",
@@ -142,7 +141,7 @@ const Game = () => {
             { option: "Stand on one foot 20 seconds." },
             { option: "Shot or not" },
           ]}
-          onSpin={handleSpinResult}
+          onSpin={handleSpin}
         />
       </div>
     </div>
