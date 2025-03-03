@@ -1,43 +1,46 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import CryptoJS from "crypto-js";
 import Spinner from "../components/Spinner";
 
 const SECRET_KEY = "your-secret-key";
 
 const Game = () => {
-  const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [turnResult, setTurnResult] = useState<null | string>(null);
   const [showPassMessage, setShowPassMessage] = useState(false);
+  const [searchParams, setSearchParams] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
+
+    // Dynamically import `useSearchParams` since it relies on `window`
+    import("next/navigation").then((mod) => {
+      const params = mod.useSearchParams();
+      setSearchParams(params.get("data"));
+    });
   }, []);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !searchParams) return;
 
-    const encryptedData = searchParams.get("data");
-    if (encryptedData) {
-      try {
-        const decodedData = decodeURIComponent(encryptedData);
-        const bytes = CryptoJS.AES.decrypt(decodedData, SECRET_KEY);
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    try {
+      const decodedData = decodeURIComponent(searchParams);
+      const bytes = CryptoJS.AES.decrypt(decodedData, SECRET_KEY);
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
-        setPlayers(decryptedData);
-        const initialScores = decryptedData.reduce((acc: { [key: string]: number }, player: string) => {
-          acc[player] = 0;
-          return acc;
-        }, {});
-        setScores(initialScores);
-      } catch (error) {
-        console.error("Error decrypting data:", error);
-      }
+      setPlayers(decryptedData);
+      const initialScores = decryptedData.reduce((acc: { [key: string]: number }, player: string) => {
+        acc[player] = 0;
+        return acc;
+      }, {});
+      setScores(initialScores);
+    } catch (error) {
+      console.error("Error decrypting data:", error);
     }
   }, [isClient, searchParams]);
 
