@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import CryptoJS from "crypto-js";
@@ -8,8 +7,8 @@ import Spinner from "../components/Spinner";
 const SECRET_KEY = "your-secret-key";
 
 const Game = () => {
+  const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
-  const searchParams = isClient ? useSearchParams() : null;
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -21,7 +20,7 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    if (!isClient || !searchParams) return;
+    if (!isClient) return;
 
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
@@ -44,25 +43,32 @@ const Game = () => {
 
   const handleSpinResult = (result: boolean) => {
     const currentPlayer = players[currentPlayerIndex];
-    setScores((prevScores) => ({
-      ...prevScores,
-      [currentPlayer]: prevScores[currentPlayer] + 1,
-    }));
-    setTurnResult(result ? "You gained points!" : "Pass");
 
-    if (!result) {
+    if (result) {
+      setScores((prevScores) => ({
+        ...prevScores,
+        [currentPlayer]: prevScores[currentPlayer] + 1,
+      }));
+      setTurnResult("You gained points!");
+    } else {
+      setScores((prevScores) => ({
+        ...prevScores,
+        [currentPlayer]: prevScores[currentPlayer] + 1,
+      }));
+      setTurnResult("Pass");
       setShowPassMessage(true);
       setTimeout(() => setShowPassMessage(false), 1500);
     }
 
-    setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+    const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    setCurrentPlayerIndex(nextPlayerIndex);
   };
 
   const handleSpin = (result: boolean) => {
     handleSpinResult(result);
   };
 
-  if (!isClient) return null; // Prevent SSR errors
+  if (!isClient) return null;
 
   return (
     <div style={{ position: "relative", height: "100vh" }}>
@@ -97,7 +103,11 @@ const Game = () => {
         }}
       >
         <h2>It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
-        {turnResult && <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>{turnResult}</h3>}
+        {turnResult && (
+          <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>
+            {turnResult}
+          </h3>
+        )}
       </div>
 
       {showPassMessage && (
