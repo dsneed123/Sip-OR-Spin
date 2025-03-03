@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation"; // Import it normally
+import { useSearchParams } from "next/navigation";
 import CryptoJS from "crypto-js";
 
 // Dynamically import Spinner component
@@ -9,8 +10,8 @@ const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
 const SECRET_KEY = "your-secret-key";
 
-const Game = () => {
-  const searchParams = useSearchParams(); // Use it inside the component
+const GameContent = () => {
+  const searchParams = useSearchParams();
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -27,15 +28,18 @@ const Game = () => {
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
       setPlayers(decryptedData);
-      const initialScores = decryptedData.reduce((acc: { [key: string]: number }, player: string) => {
-        acc[player] = 0;
-        return acc;
-      }, {});
+      const initialScores = decryptedData.reduce(
+        (acc: { [key: string]: number }, player: string) => {
+          acc[player] = 0;
+          return acc;
+        },
+        {}
+      );
       setScores(initialScores);
     } catch (error) {
       console.error("Error decrypting data:", error);
     }
-  }, [searchParams]); // No need for isClient check
+  }, [searchParams]);
 
   const handleSpinResult = (result: boolean) => {
     const currentPlayer = players[currentPlayerIndex];
@@ -58,10 +62,6 @@ const Game = () => {
 
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
-  };
-
-  const handleSpin = (result: boolean) => {
-    handleSpinResult(result);
   };
 
   return (
@@ -145,10 +145,18 @@ const Game = () => {
             { option: "Stand on one foot 20 seconds." },
             { option: "Shot or not" },
           ]}
-          onSpin={handleSpin}
+          onSpin={handleSpinResult}
         />
       </div>
     </div>
+  );
+};
+
+const Game = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GameContent />
+    </Suspense>
   );
 };
 
