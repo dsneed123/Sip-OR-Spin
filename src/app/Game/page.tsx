@@ -9,6 +9,7 @@ const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 const SECRET_KEY = "your-secret-key";
 
 const Game = () => {
+  const window = globalThis as any;
   const [isClient, setIsClient] = useState(false);
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
