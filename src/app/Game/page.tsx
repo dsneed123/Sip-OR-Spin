@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation"; // Import it normally
 import CryptoJS from "crypto-js";
 
 // Dynamically import Spinner component
@@ -9,32 +10,19 @@ const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 const SECRET_KEY = "your-secret-key";
 
 const Game = () => {
-  const window = globalThis as any;
-  const [isClient, setIsClient] = useState(false);
+  const searchParams = useSearchParams(); // Use it inside the component
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [turnResult, setTurnResult] = useState<null | string>(null);
   const [showPassMessage, setShowPassMessage] = useState(false);
-  const [searchParams, setSearchParams] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsClient(true);
-
-      // Dynamically import `useSearchParams` since it relies on `window`
-      import("next/navigation").then((mod) => {
-        const params = mod.useSearchParams();
-        setSearchParams(params.get("data"));
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isClient || !searchParams) return;
+    const encryptedData = searchParams.get("data");
+    if (!encryptedData) return;
 
     try {
-      const decodedData = decodeURIComponent(searchParams);
+      const decodedData = decodeURIComponent(encryptedData);
       const bytes = CryptoJS.AES.decrypt(decodedData, SECRET_KEY);
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
@@ -47,7 +35,7 @@ const Game = () => {
     } catch (error) {
       console.error("Error decrypting data:", error);
     }
-  }, [isClient, searchParams]);
+  }, [searchParams]); // No need for isClient check
 
   const handleSpinResult = (result: boolean) => {
     const currentPlayer = players[currentPlayerIndex];
@@ -75,8 +63,6 @@ const Game = () => {
   const handleSpin = (result: boolean) => {
     handleSpinResult(result);
   };
-
-  if (!isClient) return null;
 
   return (
     <div style={{ position: "relative", height: "100vh" }}>
