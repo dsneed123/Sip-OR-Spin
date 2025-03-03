@@ -12,7 +12,7 @@ const Game = () => {
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [turnResult, setTurnResult] = useState<null | string>(null);
-  const [isSpinning, setIsSpinning] = useState(false);
+  // const [isSpinning, setIsSpinning] = useState(false);
   const [showPassMessage, setShowPassMessage] = useState(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const Game = () => {
   }, [searchParams]);
 
   const handleSpinResult = (result: boolean) => {
-    setIsSpinning(false);
+    // setIsSpinning(false);
 
     const currentPlayer = players[currentPlayerIndex];
 
