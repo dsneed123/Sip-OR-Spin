@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import CryptoJS from "crypto-js";
@@ -7,12 +8,15 @@ import Spinner from "../components/Spinner";
 const SECRET_KEY = "your-secret-key";
 
 const Game = () => {
+  if (typeof window === "undefined") {
+    return null; // Prevent rendering during SSR
+  }
+
   const searchParams = useSearchParams();
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [turnResult, setTurnResult] = useState<null | string>(null);
-  // const [isSpinning, setIsSpinning] = useState(false);
   const [showPassMessage, setShowPassMessage] = useState(false);
 
   useEffect(() => {
@@ -36,8 +40,6 @@ const Game = () => {
   }, [searchParams]);
 
   const handleSpinResult = (result: boolean) => {
-    // setIsSpinning(false);
-
     const currentPlayer = players[currentPlayerIndex];
 
     if (result) {
@@ -49,35 +51,21 @@ const Game = () => {
     } else {
       setScores((prevScores) => ({
         ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1, // Awarding a point on pass
+        [currentPlayer]: prevScores[currentPlayer] + 1,
       }));
       setTurnResult("Pass");
       setShowPassMessage(true);
-      setTimeout(() => setShowPassMessage(false), 1500); // Fade out after 1.5s
+      setTimeout(() => setShowPassMessage(false), 1500);
     }
 
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
   };
 
-  const handleSpin = (result: boolean) => {
-    handleSpinResult(result);
-  };
-
   return (
     <div style={{ position: "relative", height: "100vh" }}>
       {/* Player List and Score */}
-      <div
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          backgroundColor: "white",
-          padding: "10px",
-          borderRadius: "5px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-        }}
-      >
+      <div style={{ position: "absolute", top: "20px", right: "20px", backgroundColor: "white", padding: "10px", borderRadius: "5px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)" }}>
         <h3 style={{ color: "black" }}>Players</h3>
         <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
           {players.map((player, index) => (
@@ -89,68 +77,36 @@ const Game = () => {
       </div>
 
       {/* Turn Info */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          textAlign: "center",
-        }}
-      >
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center" }}>
         <h2>It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
-        {turnResult && (
-          <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>
-            {turnResult}
-          </h3>
-        )}
+        {turnResult && <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>{turnResult}</h3>}
       </div>
 
       {/* PASS Message */}
       {showPassMessage && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "80px",
-            fontWeight: "bold",
-            color: "green",
-            opacity: showPassMessage ? 1 : 0,
-            transition: "opacity 1s ease-out",
-          }}
-        >
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: "80px", fontWeight: "bold", color: "green", opacity: showPassMessage ? 1 : 0, transition: "opacity 1s ease-out" }}>
           PASS
         </div>
       )}
 
       {/* Spinner Component */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
         <Spinner
           data={[
-            { option: "finish the lyric" }, //finish the lyric
-            { option: "Community Shot" }, //community each adds ingredients to a shot
-            { option: "Community Drink" }, //community each adds ingredients to a drink
-            { option: "shots/finish drink" },//shots or finish drink
-            { option: "Wordl" }, //wordl
-            { option: "Password Game" }, //password game
-            { option: "Trivia" }, //must get 5 questions right
-            { option: "Speed Math" }, // elementary school style
-            { option: "pong shot" }, //pong trick shot. 3 attempts to make. if made everyone else drinks
+            { option: "finish the lyric" },
+            { option: "Community Shot" },
+            { option: "Community Drink" },
+            { option: "shots/finish drink" },
+            { option: "Wordl" },
+            { option: "Password Game" },
+            { option: "Trivia" },
+            { option: "Speed Math" },
+            { option: "pong shot" },
             { option: "Drunk Spelling Bee" },
-            { option: "Stand on one foot 20 seconds." }, //close your eyes and everyone has to drink if you pass
-            {option: "Shot or not"} //one water shot one normal shot. 
-
+            { option: "Stand on one foot 20 seconds." },
+            { option: "Shot or not" }
           ]}
-          onSpin={handleSpin}
+          onSpin={handleSpinResult}
         />
       </div>
     </div>
