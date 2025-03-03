@@ -1,6 +1,9 @@
+"use client";
 import Image from "next/image";
 import InfoIcon from '@mui/icons-material/Info';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import Spinner from "./components/Spinner";
+
 export default function Home() {
   return (
     <div
@@ -20,8 +23,10 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center sm:text-left">
           Welcome to Sip or Spin
         </h1>
+
+        <Spinner />
         <p className="text-lg text-center sm:text-left">
-          Sip or Spin is the ultimate game to ensure a fun-filled night with your friends. Whether you're looking to explore new drinks or take a chance with the spin wheel, you're guaranteed to have a memorable time!
+          Sip or Spin is the ultimate game to ensure a fun-filled night with your friends. Whether you&#39;re looking to explore new drinks or take a chance with the spin wheel, you&#39;re guaranteed to have a memorable time!
         </p>
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
