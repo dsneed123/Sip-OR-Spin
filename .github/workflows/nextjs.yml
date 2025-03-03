@@ -64,8 +64,7 @@ jobs:
           export NODE_ENV=production
           ${{ env.runner }} next build
 
-      - name: Export Static Site
-        run: ${{ env.runner }} next export
+
 
       - name: Upload Artifact for Deployment
         uses: actions/upload-pages-artifact@v3
