@@ -81,10 +81,20 @@ const GameContent = () => {
 
   const handleSpinResult = (result: boolean, gameOption: string) => {
     if (!canSpin) return;
+    console.log("Spin result:", result, gameOption);
+    if (gameOption === "Wordle") {
+      router.push("/wordle");
+    }
+    if (gameOption === "Trivia") {
+      router.push("/Trivia");
+    }
+
     setGameTitle(gameOption);
     setGameDescription(gameDescriptions[gameOption] || "Game Description");
     setTurnResult(null);
     setCanSpin(false);
+
+
   };
 
   const nextTurn = () => {
