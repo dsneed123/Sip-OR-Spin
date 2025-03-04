@@ -43,9 +43,9 @@ const CreateGame = () => {
       <Button variant="outlined" color="primary" onClick={() => router.back()} style={{ position: 'absolute', top: '16px', left: '16px' }}>
         Back
       </Button>
-      <Card className="p-6 w-full max-w-md bg-black text-white shadow-lg">
-        <div className="flex flex-col gap-6">
-          <div>
+      <Card className="p-0 w-full max-w-md bg-black text-white " style={{ border: 0 }}>
+        <div className="flex flex-col gap-6 bg-black p-10 text-white">
+          <div className="bg-black p-4 rounded-lg">
             <div>Number of Players: {numPlayers}</div>
             <Slider
               getAriaLabel={() => "Number of Players"}
@@ -58,10 +58,11 @@ const CreateGame = () => {
             />
           </div>
 
-          <div>
+          <div className="bg-black text-white p-4 rounded-lg">
             <div>Enter Player Names</div>
             {Array.from({ length: numPlayers }).map((_, index) => (
-              <TextField
+              <div className="mt-3">
+                <TextField
                 key={index}
                 label={`Player ${index + 1}`}
                 value={playerNames[index]}
@@ -72,10 +73,37 @@ const CreateGame = () => {
                 InputProps={{
                   className: "text-white",
                   style: { borderColor: "#fff" },
+                  classes: {
+                  notchedOutline: "border-gray-600",
+                  },
                 }}
-              />
-            ))}
-          </div>
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "gray",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "white",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "white",
+                  },
+                  },
+                  "& .MuiInputBase-input": {
+                  color: "white",
+                  },
+                  "& .MuiFormLabel-root": {
+                  color: "gray",
+                  },
+                  "& .MuiFormLabel-root.Mui-focused": {
+                  color: "white",
+                  },
+                }}
+                />
+                </div>
+              ))}
+  
+            </div>
 
           <div>
             <div>Number of Rounds: {rounds}</div>
