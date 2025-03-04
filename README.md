@@ -38,17 +38,17 @@ To set up and run the project locally, follow these steps:
 Players may land on different challenges when spinning the wheel. Some of the available games include:
 
 - **Finish the Lyric** – Complete the missing lyrics of a song.
-- **Community Shot** – Everyone takes a shot.
-- **Community Drink** – Everyone takes a sip.
+- **Community Shot** – Everyone adds one ingredient into a shot glass and the player Must finish it.
+- **Community Drink** – Everyone adds one ingredient into a glass and the player Must finish it.
 - **Shots/Finish Drink** – Take a shot or finish your drink.
 - **Wordl** – A word-based puzzle game.
-- **Password Game** – Guess the secret word.
-- **Trivia** – Answer a trivia question.
+- **Password Game** – Guess the secret word. **See** https://neal.fun/password-game/
+- **Trivia** – Answer a 5 trivia questions correctly of various diifculty and take a shot.
 - **Speed Math** – Solve a quick math problem.
-- **Pong Shot** – Land a pong shot.
-- **Drunk Spelling Bee** – Spell a word while under the influence.
-- **Stand on One Foot (20 seconds)** – Maintain balance for 20 seconds.
-- **Shot or Not** – Decide whether to take a shot or pass.
+- **Pong Shot** – Land a pong trick shot **within reason** agreed upon by the other players.
+- **Drunk Spelling Bee** – Spell a 5 words correctly while under the influence.
+- **Stand on One Foot (20 seconds)** – Maintain balance for 20 seconds. If player closes eyes, everyone else must drink.
+- **Shot or Not** – One shot glass of water and one on liquor of choice. Player must take one.
 
 ## Technologies Used
 - **React.js** – Frontend framework
