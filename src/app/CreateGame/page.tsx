@@ -58,7 +58,7 @@ const CreateGame = () => {
             />
           </div>
 
-          <div className="bg-black text-white p-4 rounded-lg">
+          <div className="bg-black text-white  p-4 rounded-lg">
             <div>Enter Player Names</div>
             {Array.from({ length: numPlayers }).map((_, index) => (
               <div className="mt-3">
