@@ -13,7 +13,7 @@ export default function Home() {
       style={{ fontFamily: "var(--font-geist-sans)" }}>
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start bg-black text-white pt-16 sm:pt-20">
         <div className="bg-[#caa15d] top-0 fixed left-0 w-full flex justify-center py-4">
-          <Image src="/logo.jpg" alt="Sip or Spin logo" width={180} height={38} priority />
+          <img src="../../logo.jpg" alt="Sip or Spin logo" width={180} height={38} />
         </div>
         <h1 className="text-4xl font-bold text-center sm:text-left">
           Welcome to Sip or Spin
