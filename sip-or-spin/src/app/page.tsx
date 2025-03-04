@@ -9,8 +9,10 @@ import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"
-      style={{ fontFamily: "var(--font-geist-sans)" }}>
+    <div
+      className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"
+      style={{ fontFamily: "var(--font-geist-sans)" }}
+    >
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start bg-black text-white">
         <div className="bg-[#caa15d] top-0 fixed left-0 w-full flex justify-center py-4">
           <Image src="/logo.jpg" alt="Sip or Spin logo" width={180} height={38} priority />
