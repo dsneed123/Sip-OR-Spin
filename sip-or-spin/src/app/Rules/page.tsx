@@ -7,8 +7,8 @@ const rules = () => {
             </div>
             <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center' }}>
                 <div className="bg-[#FFECDC] rounded-3xl w-4/5 relative p-5">
-                    <div style= {{ }}>
-                        <h2 style= {{ whiteSpace: 'nowrap' }}>Game Rules</h2>
+                    <div>
+                        <h2 className="overflow-auto whitespace-nowrap">Game Rules</h2>
                     </div>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
                     <li>Spin the wheel - Players take turns spinning the wheel to receive a random challenge.</li>
@@ -18,7 +18,7 @@ const rules = () => {
                 </div>
                 <div className="bg-[#FFECDC] rounded-3xl w-4/5 relative p-5">
                     <div>
-                        <h2 style = {{ whiteSpace: 'nowrap'}}>Life Rules</h2>
+                        <h2 className="overflow-auto whitespace-nowrap">Life Rules</h2>
                     </div>
                     <li>No underage drinking - This one is self explanatory.</li>
                     <li>Know your limits - The goal is to have fun, not overdo it. Sip, don't chug!</li>
