@@ -5,15 +5,25 @@ const rules = () => {
             <div>
                 <h1 className="pt-5 pb-10 text-5xl text-center">Rules</h1>
             </div>
-            <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center'}}>
-                <div className="flex-1 bg-[#FFECDC] rounded-3xl w-2/3">
-                    <div style= {{ alignSelf: 'flex-start', zIndex: 1, top: 0}}>
-                        <h2 style= {{ whiteSpace: 'nowrap' }}>How to Play</h2>
+            <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center' }}>
+                <div className="bg-[#FFECDC] rounded-3xl w-4/5 relative p-5">
+                    <div style= {{ }}>
+                        <h2 style= {{ whiteSpace: 'nowrap' }}>Game Rules</h2>
                     </div>
-                    <p>div1</p>
+                    <li>Who goes first? - The player with the longest hair spins first.</li>
+                    <li>Spin the wheel - Players take turns spinning the wheel to receive a random challenge.</li>
+                    <li>Complete the challenge - Successful completion of the challenge increases your score.</li>
+                    <li>Penalty sip - Failing a challenge means you take a sip of your drink.</li>
+                    <li>Scoring - The player with the highest score wins!</li>
                 </div>
-                <div className="flex-1 bg-[#FFECDC] rounded-3xl w-2/3">
-                    <p>div2</p>
+                <div className="bg-[#FFECDC] rounded-3xl w-4/5 relative p-5">
+                    <div>
+                        <h2 style = {{ whiteSpace: 'nowrap'}}>Life Rules</h2>
+                    </div>
+                    <li>No underage drinking - This one is self explanatory.</li>
+                    <li>Know your limits - The goal is to have fun, not overdo it. Sip, don't chug!</li>
+                    <li>Stay hydrated - We recommend drinking 8 to 12 ounces of water for every standard alcoholic drink to stay hydrated.</li>
+                    <li>Don't drink and drive - Have a designated driver or arrange for a safe ride home.</li>
                 </div>
             </div>
         </>
