@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import CryptoJS from "crypto-js";
 import GameContainer from "../components/GameContainer";
 import { Button } from "@mui/material";
+
 // Dynamically import Spinner component
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
@@ -16,7 +17,7 @@ const gameDescriptions: { [key: string]: string } = {
   "Community Shot": "Everyone adds one ingredient into a shot glass and the player must finish it.",
   "Community Drink": "Everyone adds one ingredient into a glass and the player must finish it.",
   "Shots/Finish Drink": "Take a shot or finish your drink.",
-  "Wordl": "A word-based puzzle game.",
+  "Wordle": "A word-based puzzle game.",
   "Password Game": "Guess the secret word.",
   "Trivia": "Answer 5 trivia questions correctly and take a shot.",
   "Speed Math": "Solve a quick math problem.",
@@ -62,6 +63,21 @@ const GameContent = () => {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    const storedResult = localStorage.getItem("triviaResult");
+    if (storedResult !== null) {
+      const passed = JSON.parse(storedResult);
+      console.log("Did the player pass?", passed);
+      setTurnResult(passed ? "Pass" : "Fail");
+      if (passed) {
+        handlePass();
+      } else {
+        handleFail();
+      }
+      localStorage.removeItem("triviaResult"); // Clean up after retrieval
+    }
+  }, []);
+
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
@@ -82,19 +98,16 @@ const GameContent = () => {
   const handleSpinResult = (result: boolean, gameOption: string) => {
     if (!canSpin) return;
     console.log("Spin result:", result, gameOption);
-    if (gameOption === "Wordle") {
-      router.push("/wordle");
-    }
+
     if (gameOption === "Trivia") {
       router.push("/Trivia");
+      return;
     }
 
     setGameTitle(gameOption);
     setGameDescription(gameDescriptions[gameOption] || "Game Description");
     setTurnResult(null);
     setCanSpin(false);
-
-
   };
 
   const nextTurn = () => {
@@ -129,28 +142,25 @@ const GameContent = () => {
       </div>
 
       <div style={{ textAlign: "center" }}>
-
-      <div style={{ textAlign: "center"}}>
         <GameContainer title={gameTitle} description={gameDescription} onPass={handlePass} onFail={handleFail} />
       </div>
+      
       <div className="text-center mt-4">
         <h2 className="text-xl font-bold">It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
         {turnResult && (
           <h3 className={`mt-2 ${turnResult === "Pass" ? "text-green-500" : "text-red-500"}`}>
-        {turnResult}
+            {turnResult}
           </h3>
         )}
       </div>
-      
+
       <div style={{ textAlign: "center" }}>
         <Spinner
           data={Object.keys(gameDescriptions).map((option) => ({ option }))}
           onSpin={handleSpinResult}
           players={players}
-         
         />
       </div>
-    </div>
     </div>
   );
 };
