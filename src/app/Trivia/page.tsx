@@ -102,10 +102,11 @@ export default function TriviaGame() {
                     <Button
                     key={key}
                     onClick={() => handleAnswer(key)}
-                    className={`h-24 ${selectedOption === key ? "bg-blue-500 text-white" : "bg-gray-200"} ${key === 'A' ? 'bg-red-400' : key === 'B' ? 'bg-green-400' : key === 'C' ? 'bg-yellow-400' : 'bg-purple-400'}`}
+                    className={`h-24 text-sm ${selectedOption === key ? "bg-blue-500 text-white" : "bg-gray-200"} ${key === 'A' ? 'bg-red-400' : key === 'B' ? 'bg-green-400' : key === 'C' ? 'bg-yellow-400' : 'bg-purple-400'}`}
                     disabled={!!selectedOption}
+                    style={{ whiteSpace: "normal", wordWrap: "break-word" }}
                     >
-                    {key}: {value}
+                     {value}
                     </Button>
                 ))}
                 </div>
