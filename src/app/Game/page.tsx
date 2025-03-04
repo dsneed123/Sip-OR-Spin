@@ -135,14 +135,14 @@ const GameContent = () => {
             { option: "finish the lyric" },
             { option: "Community Shot" },
             { option: "Community Drink" },
-            { option: "shots/finish drink" },
+            { option: "shots/drink" },
             { option: "Wordl" },
             { option: "Password Game" },
             { option: "Trivia" },
             { option: "Speed Math" },
             { option: "pong shot" },
-            { option: "Drunk Spelling Bee" },
-            { option: "Stand on one foot 20 seconds." },
+            { option: "Spelling Bee" },
+            { option: "One Leg" },
             { option: "Shot or not" },
           ]}
           onSpin={handleSpinResult}

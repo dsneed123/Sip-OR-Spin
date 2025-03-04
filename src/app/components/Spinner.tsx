@@ -18,18 +18,19 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin }) => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <Wheel
-        mustStartSpinning={mustSpin}
-        prizeNumber={prizeNumber}
-        data={data}
-        onStopSpinning={() => {
-          setMustSpin(false);
-          const result = Math.random() < 0.5; // 50% chance of pass or gain points
-          onSpin(result); // Pass the result to the parent component
-        }}
-        backgroundColors={["#3e3e3e", "#df3428"]}
-        textColors={["#ffffff"]}
+    <div className="w-[900px] h-[900px] flex items-center justify-center">
+        <Wheel
+          mustStartSpinning={mustSpin}
+          prizeNumber={prizeNumber}
+          data={data}
+          onStopSpinning={() => {
+            setMustSpin(false);
+            const result = Math.random() < 0.5; // 50% chance of pass or gain points
+            onSpin(result); // Pass the result to the parent component
+          }}
+          backgroundColors={["#3e3e3e", "#df3428"]}
+          textColors={["#ffffff"]}
+        
       />
       <button
         onClick={handleSpinClick}
