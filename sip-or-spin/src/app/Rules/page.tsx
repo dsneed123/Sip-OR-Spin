@@ -6,7 +6,7 @@ const rules = () => {
                 <h1 className="text-center font-bold pt-5 pb-10 text-5xl">Rules</h1>
             </div>
             <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center' }}>
-                <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-5">
+                <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-6 border-2">
                     <div>
                         <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
                     </div>
@@ -16,7 +16,7 @@ const rules = () => {
                     <li>Penalty sip - Failing a challenge means you take a sip of your drink.</li>
                     <li>Scoring - The player with the highest score wins!</li>
                 </div>
-                <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-5">
+                <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-6 border-2">
                     <div>
                         <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Life Rules</h2>
                     </div>
