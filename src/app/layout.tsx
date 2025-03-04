@@ -25,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <title>Spin or Sip</title>
+      <meta property="og:description" content="Get Drunk. Have Fun"></meta>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
