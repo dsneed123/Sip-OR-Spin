@@ -5,12 +5,6 @@ import WordInput from '../components/WordInput';
 import Confetti from 'react-confetti'; // Import Confetti
 import './App.css';
 
-// List of 5-letter words
-const WORDS = [
-  "drink", "apple", "table", "crane", "light",
-  "house", "plant", "water", "music", "happy"
-];
-
 const MAX_GUESSES = 5; // Maximum number of guesses
 
 const App = () => {
@@ -19,33 +13,72 @@ const App = () => {
   const [gameOver, setGameOver] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  const [message, setMessage] = useState(""); // Message to display in the pop-up
+  const [message, setMessage] = useState("");
+  const [validWords, setValidWords] = useState([]); // List of valid words
+  const [targetWords, setTargetWords] = useState([]); // List of target words
 
-  // Set a random word when the component mounts
+  // Fetch word lists from .txt files
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * WORDS.length);
-    setRandomWord(WORDS[randomIndex]);
+    const fetchWords = async () => {
+      try {
+        // Fetch target words
+        const targetResponse = await fetch('/words.txt');
+        const targetText = await targetResponse.text();
+        const targetWords = targetText.split('\n').map(word => word.trim());
+        setTargetWords(targetWords);
+
+        // Fetch valid words
+        const validResponse = await fetch('/valid-words.txt');
+        const validText = await validResponse.text();
+        const validWords = validText.split('\n').map(word => word.trim());
+        setValidWords(validWords);
+
+        // Set a random target word
+        const randomIndex = Math.floor(Math.random() * targetWords.length);
+        setRandomWord(targetWords[randomIndex]);
+      } catch (error) {
+        console.error("Error fetching word lists:", error);
+      }
+    };
+
+    fetchWords();
   }, []);
 
   const handleGuess = () => {
     if (guess.length === 5 && !gameOver) {
+      // Check if the word is valid
+      if (!validWords.includes(guess.toLowerCase())) {
+        setMessage("Invalid word! Try again.");
+        setShowMessage(true);
+        return; // Exit if the word is invalid
+      }
+
       setGuesses([...guesses, guess]);
+
+      // Check win condition
       if (guess.toUpperCase() === randomWord.toUpperCase()) {
         setGameOver(true);
         setMessage("You win!"); // Set win message
         setShowMessage(true);
       } else if (guesses.length + 1 >= MAX_GUESSES) {
         setGameOver(true);
-        setMessage(`You lose! The word was ${randomWord.toUpperCase()}! Time to drink 🍺`); // Set lose message
+        setMessage(`You lose! The word was ${randomWord.toUpperCase()}! Time to drink 🍺`);
         setShowMessage(true);
       }
+
       setGuess('');
     }
   };
 
-  const closeMessage = () => {
-    setShowMessage(false);
-  };
+  // Auto-hide invalid word message after 1.5 seconds
+  useEffect(() => {
+    if (showMessage && message.includes("Invalid")) {
+      const timer = setTimeout(() => {
+        setShowMessage(false); // Hide the message after 1.5 seconds
+      }, 1500);
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [showMessage, message]);
 
   // Reset the game
   const resetGame = () => {
@@ -53,8 +86,8 @@ const App = () => {
     setGuess('');
     setGameOver(false);
     setShowMessage(false);
-    const randomIndex = Math.floor(Math.random() * WORDS.length);
-    setRandomWord(WORDS[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * targetWords.length);
+    setRandomWord(targetWords[randomIndex]);
   };
 
   return (
@@ -70,9 +103,16 @@ const App = () => {
         handleGuess={handleGuess}
         gameOver={gameOver} // Pass gameOver state to disable input
       />
-      
-      {/* Pop-up message */}
-      {showMessage && (
+
+      {/* Display remaining guesses or the error message */}
+      <p className="guesses-remaining">
+        {showMessage && message.includes("Invalid") 
+          ? message // Show "Invalid word" message
+          : `Guesses remaining: ${MAX_GUESSES - guesses.length}`}
+      </p>
+
+      {/* Pop-up message for win/lose condition */}
+      {showMessage && !message.includes("Invalid") && (
         <>
           {/* Show confetti only when the player wins */}
           {message.includes("win") && <Confetti />}
@@ -84,11 +124,6 @@ const App = () => {
           </div>
         </>
       )}
-
-      {/* Display remaining guesses */}
-      <p className="guesses-remaining">
-        Guesses remaining: {MAX_GUESSES - guesses.length}
-      </p>
     </div>
   );
 };
