@@ -4,11 +4,27 @@ import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import CryptoJS from "crypto-js";
+import GameContainer from "../components/GameContainer";
 
 // Dynamically import Spinner component
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
 const SECRET_KEY = "your-secret-key";
+
+const gameDescriptions: { [key: string]: string } = {
+  "Finish the Lyric": "Complete the missing lyrics of a song.",
+  "Community Shot": "Everyone adds one ingredient into a shot glass and the player must finish it.",
+  "Community Drink": "Everyone adds one ingredient into a glass and the player must finish it.",
+  "Shots/Finish Drink": "Take a shot or finish your drink.",
+  "Wordl": "A word-based puzzle game.",
+  "Password Game": "Guess the secret word.",
+  "Trivia": "Answer 5 trivia questions correctly and take a shot.",
+  "Speed Math": "Solve a quick math problem.",
+  "Pong Shot": "Land a pong trick shot within reason, agreed upon by other players.",
+  "Spelling Bee": "Spell 5 words correctly while under the influence.",
+  "One Leg": "Stand on one foot for 20 seconds. If you close your eyes, everyone else drinks.",
+  "Shot or Not": "One shot glass has water, one has liquor. Choose one."
+};
 
 const GameContent = () => {
   const searchParams = useSearchParams();
@@ -16,7 +32,9 @@ const GameContent = () => {
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [turnResult, setTurnResult] = useState<null | string>(null);
-  const [showPassMessage, setShowPassMessage] = useState(false);
+  const [gameTitle, setGameTitle] = useState("Game Title");
+  const [gameDescription, setGameDescription] = useState("Game Description");
+  const [canSpin, setCanSpin] = useState(true);
 
   useEffect(() => {
     const encryptedData = searchParams.get("data");
@@ -41,25 +59,32 @@ const GameContent = () => {
     }
   }, [searchParams]);
 
-  const handleSpinResult = (result: boolean) => {
+  const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
+    setScores((prevScores) => ({
+      ...prevScores,
+      [currentPlayer]: prevScores[currentPlayer] + 1,
+    }));
+    setTurnResult("Pass");
+    setCanSpin(true);
+    nextTurn();
+  };
 
-    if (result) {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1,
-      }));
-      setTurnResult("You gained points!");
-    } else {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [currentPlayer]: prevScores[currentPlayer] + 1,
-      }));
-      setTurnResult("Pass");
-      setShowPassMessage(true);
-      setTimeout(() => setShowPassMessage(false), 1500);
-    }
+  const handleFail = () => {
+    setTurnResult("Fail");
+    setCanSpin(true);
+    nextTurn();
+  };
 
+  const handleSpinResult = (result: boolean, gameOption: string) => {
+    if (!canSpin) return;
+    setGameTitle(gameOption);
+    setGameDescription(gameDescriptions[gameOption] || "Game Description");
+    setTurnResult(null);
+    setCanSpin(false);
+  };
+
+  const nextTurn = () => {
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
   };
@@ -87,65 +112,26 @@ const GameContent = () => {
         </ul>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          textAlign: "center",
-        }}
-      >
-        <h2>It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
+
+
+      <div style={{ textAlign: "center"}}>
+        <GameContainer title={gameTitle} description={gameDescription} onPass={handlePass} onFail={handleFail} />
+      </div>
+      <div className="text-center mt-4">
+        <h2 className="text-xl font-bold">It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
         {turnResult && (
-          <h3 style={{ color: turnResult === "Pass" ? "red" : "green" }}>
-            {turnResult}
+          <h3 className={`mt-2 ${turnResult === "Pass" ? "text-green-500" : "text-red-500"}`}>
+        {turnResult}
           </h3>
         )}
       </div>
-
-      {showPassMessage && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "80px",
-            fontWeight: "bold",
-            color: "green",
-            opacity: showPassMessage ? 1 : 0,
-            transition: "opacity 1s ease-out",
-          }}
-        >
-          PASS
-        </div>
-      )}
-
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
+      
+      <div style={{ textAlign: "center" }}>
         <Spinner
-          data={[
-            { option: "finish the lyric" },
-            { option: "Community Shot" },
-            { option: "Community Drink" },
-            { option: "shots/drink" },
-            { option: "Wordl" },
-            { option: "Password Game" },
-            { option: "Trivia" },
-            { option: "Speed Math" },
-            { option: "pong shot" },
-            { option: "Spelling Bee" },
-            { option: "One Leg" },
-            { option: "Shot or not" },
-          ]}
+          data={Object.keys(gameDescriptions).map((option) => ({ option }))}
           onSpin={handleSpinResult}
+          players={players}
+         
         />
       </div>
     </div>

@@ -4,12 +4,15 @@ import { Wheel } from "react-custom-roulette";
 
 interface SpinnerProps {
   data: { option: string }[];
-  onSpin: (result: boolean) => void; // Ensure that 'onSpin' is a function and properly typed
+  onSpin: (result: boolean, gameOption: string) => void; // Ensure that 'onSpin' is a function and properly typed
+  players: string[]; // Add players prop
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ data, onSpin }) => {
+const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  const [scores, setScores] = useState(Array(players.length).fill(0));
 
   const handleSpinClick = () => {
     const newPrizeNumber = Math.floor(Math.random() * data.length);
@@ -17,25 +20,26 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin }) => {
     setMustSpin(true);
   };
 
+  const handleStopSpinning = () => {
+    setMustSpin(false);
+    const result = Math.random() < 0.5; // 50% chance of pass or gain points
+    if (result) {
+      // Pass: add one point to the current player's score
+      const newScores = [...scores];
+      newScores[currentPlayerIndex] += 1;
+      setScores(newScores);
+    }
+    // Move to the next player
+    setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    onSpin(result, data[prizeNumber].option); // Pass the result and game option to the parent component
+  };
+
   return (
-    <div className="w-[900px] h-[900px] flex items-center justify-center">
-        <Wheel
-          mustStartSpinning={mustSpin}
-          prizeNumber={prizeNumber}
-          data={data}
-          onStopSpinning={() => {
-            setMustSpin(false);
-            const result = Math.random() < 0.5; // 50% chance of pass or gain points
-            onSpin(result); // Pass the result to the parent component
-          }}
-          backgroundColors={["#3e3e3e", "#df3428"]}
-          textColors={["#ffffff"]}
-        
-      />
+    <div className="flex flex-col items-center  h-screen">
       <button
         onClick={handleSpinClick}
         style={{
-          marginTop: "20px",
+          margin: "10px",
           padding: "10px 20px",
           fontSize: "16px",
           cursor: "pointer",
@@ -50,6 +54,17 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin }) => {
       >
         SPIN
       </button>
+      <div className=" flex items-center justify-center">
+        <Wheel
+          mustStartSpinning={mustSpin}
+          prizeNumber={prizeNumber}
+          data={data}
+          onStopSpinning={handleStopSpinning}
+          backgroundColors={["#3e3e3e", "#df3428"]}
+          textColors={["#ffffff"]}
+        />
+      </div>
+
     </div>
   );
 };
