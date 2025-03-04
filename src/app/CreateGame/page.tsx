@@ -39,8 +39,11 @@ const CreateGame = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-950">
-      <Card className="p-6 w-full max-w-md bg-gray-900 text-white shadow-lg">
+    <div className="h-screen flex items-center justify-center bg-black">
+      <Button variant="outlined" color="primary" onClick={() => router.back()} style={{ position: 'absolute', top: '16px', left: '16px' }}>
+        Back
+      </Button>
+      <Card className="p-6 w-full max-w-md bg-black text-white shadow-lg">
         <div className="flex flex-col gap-6">
           <div>
             <div>Number of Players: {numPlayers}</div>

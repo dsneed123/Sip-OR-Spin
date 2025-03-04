@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import CryptoJS from "crypto-js";
 import GameContainer from "../components/GameContainer";
-
+import { Button } from "@mui/material";
 // Dynamically import Spinner component
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
@@ -28,6 +28,7 @@ const gameDescriptions: { [key: string]: string } = {
 
 const GameContent = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -90,29 +91,32 @@ const GameContent = () => {
   };
 
   return (
-    <div style={{ position: "relative", height: "100vh" }}>
+    <div className="bg-black text-white" style={{ position: "relative", height: "100vh" }}>
+      <Button variant="outlined" color="primary" onClick={() => router.back()} style={{ position: 'absolute', top: '16px', left: '16px' }}>
+        Back
+      </Button>
       <div
         style={{
           position: "absolute",
           top: "20px",
           right: "20px",
-          backgroundColor: "white",
+          backgroundColor: "#333",
           padding: "10px",
           borderRadius: "5px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
         }}
       >
-        <h3 style={{ color: "black" }}>Players</h3>
+        <h3 style={{ color: "white" }}>Players</h3>
         <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
           {players.map((player, index) => (
-            <li key={index} style={{ marginBottom: "10px", fontWeight: "bold", color: "black" }}>
+            <li key={index} style={{ marginBottom: "10px", fontWeight: "bold", color: "white" }}>
               {player} - Score: {scores[player] || 0}
             </li>
           ))}
         </ul>
       </div>
 
-
+      <div style={{ textAlign: "center" }}>
 
       <div style={{ textAlign: "center"}}>
         <GameContainer title={gameTitle} description={gameDescription} onPass={handlePass} onFail={handleFail} />
@@ -134,6 +138,7 @@ const GameContent = () => {
          
         />
       </div>
+    </div>
     </div>
   );
 };
