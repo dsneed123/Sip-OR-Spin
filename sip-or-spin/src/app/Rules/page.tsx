@@ -3,12 +3,12 @@ const rules = () => {
     return (
         <>
             <div>
-                <h1 className="pt-5 pb-10 text-5xl text-center">Rules</h1>
+                <h1 className="text-center font-bold pt-5 pb-10 text-5xl">Rules</h1>
             </div>
             <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center' }}>
-                <div className="bg-[#FFECDC] rounded-3xl w-4/5 relative p-5">
+                <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-5">
                     <div>
-                        <h2 className="overflow-auto whitespace-nowrap">Game Rules</h2>
+                        <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
                     </div>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
                     <li>Spin the wheel - Players take turns spinning the wheel to receive a random challenge.</li>
@@ -16,9 +16,9 @@ const rules = () => {
                     <li>Penalty sip - Failing a challenge means you take a sip of your drink.</li>
                     <li>Scoring - The player with the highest score wins!</li>
                 </div>
-                <div className="bg-[#FFECDC] rounded-3xl w-4/5 relative p-5">
+                <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-5">
                     <div>
-                        <h2 className="overflow-auto whitespace-nowrap">Life Rules</h2>
+                        <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Life Rules</h2>
                     </div>
                     <li>No underage drinking - This one is self explanatory.</li>
                     <li>Know your limits - The goal is to have fun, not overdo it. Sip, don't chug!</li>
