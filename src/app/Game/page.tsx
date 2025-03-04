@@ -24,7 +24,8 @@ const gameDescriptions: { [key: string]: string } = {
   "Spelling Bee": "Spell 5 words correctly while under the influence.",
   "One Leg": "Stand on one foot for 20 seconds. If you close your eyes, everyone else drinks.",
   "Shot or Not": "One shot glass has water, one has liquor. Choose one.",
-  "Stand up Comedy": "You must now perform a stand-up comedy act. The others decide if you pass or fail."
+  "Stand up Comedy": "You must now perform a stand-up comedy act. The others decide if you pass or fail.",
+  "Everyone drinks": "Everyone takes a drink.",
 };
 
 const GameContent = () => {
