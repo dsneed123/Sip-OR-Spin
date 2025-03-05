@@ -5,12 +5,14 @@ const rules = () => {
             <div>
                 <h1 className="text-center font-bold pt-5 pb-10 text-5xl">Rules</h1>
             </div>
-            <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="flex flex-col gap-10.25 items-center">
                 <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-6 border-2">
                     <div>
-                        <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
+                        <div>
+                            <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
+                        </div>
                     </div>
-                    <img src={'../cup.png'} alt="Solo cup"/>
+                    <img className="w-40" src={'../cup.png'} alt="Solo cup"/>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
                     <li>Spin the wheel - Players take turns spinning the wheel to receive a random challenge.</li>
                     <li>Complete the challenge - Successful completion of the challenge increases your score.</li>
