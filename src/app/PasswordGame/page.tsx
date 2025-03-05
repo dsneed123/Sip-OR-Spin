@@ -46,6 +46,25 @@ const PasswordGame: React.FC = () => {
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
             return "Password must include a special character.";
         }
+        // Rule 5: Password must contain only prime numbers
+        const isPrime = (num: number) => {
+            if (num <= 1) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i === 0) return false;
+            }
+            return true;
+        };
+
+        const containsOnlyPrimes = (password: string) => {
+            return password.split('').every(char => {
+            const num = parseInt(char, 10);
+            return !isNaN(num) && isPrime(num);
+            });
+        };
+
+        if (!containsOnlyPrimes(password)) {
+            return "Password must contain only prime numbers.";
+        }
 
         // If all rules are passed
         return "✅ Correct Password!";
