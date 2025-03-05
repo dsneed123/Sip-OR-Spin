@@ -13,6 +13,14 @@ const PasswordGame: React.FC = () => {
 
     // Add validation functions for each rule
     const validatePassword = (password: string) => {
+        if (password === "help") {
+            return "Hackers have encrypted your system files. Your goal is to find the key to decrypt your files \n In the terminal type potential passwords to try and guess it and press enter \nEnter the correct password to decrypt them.";
+        }
+        if (password === "clear") {
+            setHistory([]);
+            setMessage("");
+            return "";
+        }
         if (password === "ls") {
             return "kali.txt";
         }
@@ -96,7 +104,7 @@ const PasswordGame: React.FC = () => {
                 <div className="p-4">
                     <p className="text-xs">Microsoft(R) Windows 95</p>
                     <p className="text-xs">(C)Copyright Microsoft Corp 1981-1995</p>
-                    <p className="text-xs">C:\Windows\Users\</p>
+                    <p className="text-xs">Type Help to begin</p>
 
                     {/* Command History */}
                     <div
@@ -115,7 +123,7 @@ const PasswordGame: React.FC = () => {
                             type="text"
                             value={input}
                             onChange={handleChange}
-                            className="w-full bg-black border-none text-white focus:outline-none font-mono px-2"
+                            className="w-full bg-black border-none text-white focus:outline-none font-mono text-xs px-2"
                             autoFocus
                         />
                     </form>
