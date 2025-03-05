@@ -4,8 +4,8 @@ import { Wheel } from "react-custom-roulette";
 
 interface SpinnerProps {
   data: { option: string }[];
-  onSpin: (result: boolean, gameOption: string) => void; // Ensure that 'onSpin' is a function and properly typed
-  players: string[]; // Add players prop
+  onSpin: (result: boolean, gameOption: string) => void;
+  players: string[];
 }
 
 const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
@@ -15,14 +15,16 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
   const [scores, setScores] = useState(Array(players.length).fill(0));
 
   const handleSpinClick = () => {
-    const newPrizeNumber = Math.floor(Math.random() * data.length);
-    setPrizeNumber(newPrizeNumber);
-    setMustSpin(true);
+    if (!mustSpin) {
+      const newPrizeNumber = Math.floor(Math.random() * data.length);
+      setPrizeNumber(newPrizeNumber);
+      setMustSpin(true);
+    }
   };
 
   const handleStopSpinning = () => {
     setMustSpin(false);
-    const result = Math.random() < 0.5; // 50% chance of pass or gain points
+    const result = Math.random() < 0.5; // 50% chance of pass or fail
     if (result) {
       // Pass: add one point to the current player's score
       const newScores = [...scores];
@@ -35,26 +37,18 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
   };
 
   return (
-    <div className="flex flex-col items-center  h-screen">
+    <div className="flex flex-col items-center justify-start h-screen bg-black p-4 overflow-hidden">
+      {/* Spin Button */}
       <button
         onClick={handleSpinClick}
-        style={{
-          margin: "10px",
-          padding: "10px 20px",
-          fontSize: "16px",
-          cursor: "pointer",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          transition: "background-color 0.3s ease",
-        }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#0056b3")}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#007bff")}
+        disabled={mustSpin}
+        className="px-8 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed mb-4"
       >
-        SPIN
+        {mustSpin ? "Spinning..." : "SPIN"}
       </button>
-      <div className=" flex items-center justify-center">
+
+      {/* Wheel Container */}
+      <div className="w-full max-w-md flex justify-center" style={{ height: "60vh" }}>
         <Wheel
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
@@ -62,9 +56,16 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
           onStopSpinning={handleStopSpinning}
           backgroundColors={["#3e3e3e", "#df3428"]}
           textColors={["#ffffff"]}
+          outerBorderColor="#333"
+          outerBorderWidth={10}
+          radiusLineColor="#555"
+          radiusLineWidth={2}
+          fontSize={14} // Reduced font size
+          textDistance={60} // Adjusted text distance
+          spinDuration={0.5}
+          perpendicularText={false} // Ensure text remains horizontal
         />
       </div>
-
     </div>
   );
 };

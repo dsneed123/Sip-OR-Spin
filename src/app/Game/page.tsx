@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
-import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import CryptoJS from "crypto-js";
 import GameContainer from "../components/GameContainer";
 import { Button } from "@mui/material";
+import dynamic from "next/dynamic";
 
-// Dynamically import Spinner component
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
 const SECRET_KEY = "your-secret-key";
@@ -17,7 +16,7 @@ const gameDescriptions: { [key: string]: string } = {
   "Community Shot": "Everyone adds one ingredient into a shot glass and the player must finish it.",
   "Community Drink": "Everyone adds one ingredient into a glass and the player must finish it.",
   "Shots/Finish Drink": "Take a shot or finish your drink.",
-  "Wordle": "A word-based puzzle game.",
+  "Wordl": "A word-based puzzle game.",
   "Password Game": "Guess the secret word.",
   "Trivia": "Answer 5 trivia questions correctly and take a shot.",
   "Speed Math": "Solve a quick math problem.",
@@ -29,7 +28,7 @@ const gameDescriptions: { [key: string]: string } = {
   "Everyone drinks": "Everyone takes a drink.",
 };
 
-const GameContent = () => {
+const Game = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
@@ -63,21 +62,6 @@ const GameContent = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    const storedResult = localStorage.getItem("triviaResult");
-    if (storedResult !== null) {
-      const passed = JSON.parse(storedResult);
-      console.log("Did the player pass?", passed);
-      setTurnResult(passed ? "Pass" : "Fail");
-      if (passed) {
-        handlePass();
-      } else {
-        handleFail();
-      }
-      localStorage.removeItem("triviaResult"); // Clean up after retrieval
-    }
-  }, []);
-
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
@@ -98,10 +82,11 @@ const GameContent = () => {
   const handleSpinResult = (result: boolean, gameOption: string) => {
     if (!canSpin) return;
     console.log("Spin result:", result, gameOption);
-
+    if (gameOption === "Wordle") {
+      router.push("/wordle");
+    }
     if (gameOption === "Trivia") {
       router.push("/Trivia");
-      return;
     }
 
     setGameTitle(gameOption);
@@ -116,60 +101,111 @@ const GameContent = () => {
   };
 
   return (
-    <div className="bg-black text-white" style={{ position: "relative", height: "100vh" }}>
-      <Button variant="outlined" color="primary" onClick={() => router.back()} style={{ position: 'absolute', top: '16px', left: '16px' }}>
-        Back
-      </Button>
-      <div
+    <div
+      style={{
+        backgroundColor: "#000000",
+        color: "#ffffff",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      {/* Back Button */}
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => router.back()}
         style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          backgroundColor: "#333",
-          padding: "10px",
-          borderRadius: "5px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+          position: "fixed",
+          top: "1rem",
+          left: "1rem",
+          zIndex: 10,
         }}
       >
-        <h3 style={{ color: "white" }}>Players</h3>
+        Back
+      </Button>
+
+      {/* Players and Scores */}
+      <div
+        style={{
+          position: "fixed",
+          top: "1rem",
+          right: "1rem",
+          backgroundColor: "#2d3748",
+          padding: "1rem",
+          borderRadius: "0.5rem",
+          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          zIndex: 10,
+        }}
+      >
+        <h3 style={{ fontSize: "1.125rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+          Players
+        </h3>
         <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
           {players.map((player, index) => (
-            <li key={index} style={{ marginBottom: "10px", fontWeight: "bold", color: "white" }}>
+            <li
+              key={index}
+              style={{ fontSize: "0.875rem", marginBottom: "0.5rem" }}
+            >
               {player} - Score: {scores[player] || 0}
             </li>
           ))}
         </ul>
       </div>
 
-      <div style={{ textAlign: "center" }}>
-        <GameContainer title={gameTitle} description={gameDescription} onPass={handlePass} onFail={handleFail} />
-      </div>
-      
-      <div className="text-center mt-4">
-        <h2 className="text-xl font-bold">It&apos;s {players[currentPlayerIndex]}&apos;s Turn</h2>
-        {turnResult && (
-          <h3 className={`mt-2 ${turnResult === "Pass" ? "text-green-500" : "text-red-500"}`}>
-            {turnResult}
-          </h3>
-        )}
-      </div>
+      {/* Main Content */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "1rem",
+          marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
+        }}
+      >
+        {/* Game Container */}
+        <div style={{ textAlign: "center" }}>
+          <GameContainer
+            title={gameTitle}
+            description={gameDescription}
+            onPass={handlePass}
+            onFail={handleFail}
+          />
+        </div>
 
-      <div style={{ textAlign: "center" }}>
-        <Spinner
-          data={Object.keys(gameDescriptions).map((option) => ({ option }))}
-          onSpin={handleSpinResult}
-          players={players}
-        />
+        {/* Current Player */}
+        <div style={{ textAlign: "center" }}>
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
+            It&apos;s {players[currentPlayerIndex]}&apos;s Turn
+          </h2>
+          {turnResult && (
+            <h3
+              style={{
+                marginTop: "0.5rem",
+                fontSize: "1.125rem",
+                color: turnResult === "Pass" ? "#48bb78" : "#f56565",
+              }}
+            >
+              {turnResult}
+            </h3>
+          )}
+        </div>
+
+        {/* Spinner */}
+        <div style={{ textAlign: "center" }}>
+          <Spinner
+            data={Object.keys(gameDescriptions).map((option) => ({ option }))}
+            onSpin={handleSpinResult}
+            players={players}
+          />
+        </div>
       </div>
     </div>
-  );
-};
-
-const Game = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <GameContent />
-    </Suspense>
   );
 };
 
