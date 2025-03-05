@@ -1,6 +1,4 @@
 import React from "react";
-import Image from 'next/image';
-import cup from '/cup.png';
 const rules = () => {
     return (
         <>
@@ -12,7 +10,7 @@ const rules = () => {
                     <div>
                         <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
                     </div>
-                    <Image src={cup} alt="Solo cup"/>
+                    <img src={'../cup.png'} alt="Solo cup"/>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
                     <li>Spin the wheel - Players take turns spinning the wheel to receive a random challenge.</li>
                     <li>Complete the challenge - Successful completion of the challenge increases your score.</li>
