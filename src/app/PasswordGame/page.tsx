@@ -16,6 +16,9 @@ const PasswordGame: React.FC = () => {
         if (password === "help") {
             return "Hackers have encrypted your system files. Your goal is to find the key to decrypt your files \n In the terminal type potential passwords to try and guess it and press enter \nEnter the correct password to decrypt them.";
         }
+        if (password === "cat kali.txt") {
+            return "68747470733A2F2F7777772E796F75747562652E636F6D2F77617463683F763D39464C5248656A57416F38";
+        }
         if (password === "clear") {
             setHistory([]);
             setMessage("");
@@ -58,7 +61,7 @@ const PasswordGame: React.FC = () => {
         setMessage(validationMessage);
 
         // Add input to history
-        setHistory((prevHistory) => [...prevHistory, `C:\\Windows\\Users&gt; ${input}\n${validationMessage}`]);
+        setHistory((prevHistory) => [...prevHistory, `C:\\Windows\\Users\; ${input}\n${validationMessage}`]);
 
         setInput(""); // Clear input field
     };
@@ -112,7 +115,7 @@ const PasswordGame: React.FC = () => {
                         className="max-h-60 overflow-y-auto text-xs text-white font-mono"
                     >
                         {history.map((entry, index) => (
-                            <pre key={index} className="whitespace-pre-wrap">{entry}</pre>
+                            <pre key={index} className="whitespace-pre-wrap break-words">{entry}</pre>
                         ))}
                     </div>
 
