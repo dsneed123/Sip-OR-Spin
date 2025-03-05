@@ -175,13 +175,13 @@ const Game = () => {
       </div>
 
       <div style={{ textAlign: "center" }}>
-        <Suspense>
+       
           <Spinner
             data={Object.keys(gameDescriptions).map((option) => ({ option }))}
             onSpin={() => {}}
             players={players}
           />
-        </Suspense>
+       
       </div>
     </div>
   );
