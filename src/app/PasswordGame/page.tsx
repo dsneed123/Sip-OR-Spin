@@ -145,7 +145,7 @@ const PasswordGame: React.FC = () => {
                             type="text"
                             value={input}
                             onChange={handleChange}
-                            className="w-full bg-black border-none text-white focus:outline-none font-mono text-xs px-2"
+                            className="w-full bg-black border-none ml-0 text-white focus:outline-none font-mono text-xs px-2"
                             autoFocus
                         />
                     </form>
@@ -155,13 +155,16 @@ const PasswordGame: React.FC = () => {
             </div>
 
             {/* Windows 95 Taskbar */}
-            <div className="fixed bottom-0 left-0 w-full h-10 bg-[#C0C0C0] border-t border-gray-500 flex items-center p-2">
-                <div style={{ display: 'flex', alignItems: 'center', padding: '2px', backgroundColor: '#C0C0C0', borderTop: '1px solid #808080' }}>
-                    <Button style={{ display: 'flex', alignItems: 'center', padding: '2px 8px', backgroundColor: '#C0C0C0', border: '1px solid #808080', boxShadow: 'inset 1px 1px #fff, inset -1px -1px #000', fontSize: '12px' }}>
-                        <Logo variant="32x32_4" style={{ marginRight: 4 }} />
-                        Start
-                    </Button>
-                </div>
+            <div className="fixed bottom-0 left-0 w-full h-10 bg-[#C0C0C0] border-t border-gray-500 flex items-center justify-between p-2">
+                <Button style={{ display: 'flex', alignItems: 'center', padding: '2px 8px', backgroundColor: '#C0C0C0', border: '1px solid #808080', boxShadow: 'inset 1px 1px #fff, inset -1px -1px #000', fontSize: '12px' }}>
+                    <Logo variant="32x32_4" style={{ marginRight: 4 }} />
+                    Start
+                </Button>
+                <Button style={{ display: 'flex', height: '100%', alignItems: 'center', padding: '2px 8px', backgroundColor: '#C0C0C0', border: '1px solid #808080', boxShadow: 'inset 1px 1px #fff, inset -1px -1px #000', fontSize: '12px' }}>
+                    <div style={{ paddingRight: '8px', fontSize: '12px' }}>
+                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                </Button>
             </div>
         </div>
     );
