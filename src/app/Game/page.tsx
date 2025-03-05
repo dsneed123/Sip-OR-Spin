@@ -6,9 +6,12 @@ import CryptoJS from "crypto-js";
 import GameContainer from "../components/GameContainer";
 import { Button } from "@mui/material";
 import dynamic from "next/dynamic";
+// import router from "next/router"; // Remove this line
+
+
 
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
-
+// const router = useRouter(); // Remove this line
 const SECRET_KEY = "your-secret-key";
 
 const gameDescriptions: { [key: string]: string } = {
@@ -16,7 +19,7 @@ const gameDescriptions: { [key: string]: string } = {
   "Community Shot": "Everyone adds one ingredient into a shot glass and the player must finish it.",
   "Community Drink": "Everyone adds one ingredient into a glass and the player must finish it.",
   "Shots/Finish Drink": "Take a shot or finish your drink.",
-  "Wordl": "A word-based puzzle game.",
+  "Wordle": "A word-based puzzle game.",
   "Password Game": "Guess the secret word.",
   "Trivia": "Answer 5 trivia questions correctly and take a shot.",
   "Speed Math": "Solve a quick math problem.",
@@ -27,6 +30,7 @@ const gameDescriptions: { [key: string]: string } = {
   "Stand up Comedy": "You must now perform a stand-up comedy act. The others decide if you pass or fail.",
   "Everyone drinks": "Everyone takes a drink.",
 };
+
 
 const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   const searchParams = useSearchParams();
@@ -57,6 +61,7 @@ const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
 };
 
 const Game = () => {
+
   const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
@@ -66,6 +71,19 @@ const Game = () => {
   const [gameDescription, setGameDescription] = useState("Game Description");
   const [canSpin, setCanSpin] = useState(true);
 
+
+  const handleSpinResult = (result: boolean, gameOption: string) => {
+  
+    console.log("Spin Result:", result, "Game Option:", gameOption);
+  
+    if (["Trivia", "Password Game", "Wordle"].includes(gameOption)) {
+    
+      const formattedGameRoute = `/${gameOption.replace(/\s+/g, "")}`; // Remove spaces for URL
+      console.log("Navigating to:", formattedGameRoute);
+      router.push(formattedGameRoute); // Navigate to the game page
+    }
+  };
+  
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
@@ -176,11 +194,12 @@ const Game = () => {
 
       <div style={{ textAlign: "center" }}>
        
-          <Spinner
-            data={Object.keys(gameDescriptions).map((option) => ({ option }))}
-            onSpin={() => {}}
-            players={players}
-          />
+      <Spinner
+        data={Object.keys(gameDescriptions).map((option) => ({ option }))}
+        onSpin={handleSpinResult} // Make sure it's correctly passed
+        players={players}
+      />
+
        
       </div>
     </div>
