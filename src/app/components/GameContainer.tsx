@@ -1,25 +1,60 @@
-import React from 'react';
+import React from "react";
 
 interface GameContainerProps {
-    title: string;
-    description: string;
-    onPass: () => void;
-    onFail: () => void;
+  title: string;
+  description: string;
+  onPass: () => void;
+  onFail: () => void;
 }
 
-const GameContainer: React.FC<GameContainerProps> = ({ title, description, onPass, onFail }) => {
-    return (
-        <div className="p-4 bg-black rounded-lg shadow-md mt-0">
-            <h1 className="text-2xl font-bold mb-4 text-white">{title}</h1>
-            <p className="mb-4 text-gray-300">{description}</p>
-            <button onClick={onPass} className="px-4 py-2 bg-blue-500 text-white rounded mr-2 hover:bg-blue-700">
-            Pass
-            </button>
-            <button onClick={onFail} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">
-            Fail
-            </button>
-        </div>
-    );
+const GameContainer: React.FC<GameContainerProps> = ({
+  title,
+  description,
+  onPass,
+  onFail,
+}) => {
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h1 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: "1rem" }}>
+        {title}
+      </h1>
+      <p style={{ fontSize: "1.125rem", marginBottom: "1.5rem" }}>
+        {description}
+      </p>
+      <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+        <button
+          onClick={onPass}
+          style={{
+            padding: "0.5rem 1rem",
+            fontSize: "1rem",
+            fontWeight: 600,
+            backgroundColor: "#48bb78",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          Pass
+        </button>
+        <button
+          onClick={onFail}
+          style={{
+            padding: "0.5rem 1rem",
+            fontSize: "1rem",
+            fontWeight: 600,
+            backgroundColor: "#f56565",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          Fail
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default GameContainer;

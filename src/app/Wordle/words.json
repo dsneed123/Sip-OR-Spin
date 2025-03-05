@@ -1,0 +1,4 @@
+{
+    "WORDS": ["drink", "apple", "table", "crane", "light", "house", "plant", "water", "music", "happy"],
+    "VALID_WORDS": ["drink", "apple", "table", "crane", "light", "house", "plant", "water", "music", "happy", "grape", "lemon", "mango", "peach", "berry"]
+  }
