@@ -71,19 +71,64 @@ const Game = () => {
   const [gameDescription, setGameDescription] = useState("Game Description");
   const [canSpin, setCanSpin] = useState(true);
 
-
+  
+  useEffect(() => {
+    if (players.length === 0) return; // Ensure players are loaded before running this
+  
+    const storedResult = localStorage.getItem("triviaResult");
+    const lastPlayerIndex = localStorage.getItem("lastPlayerIndex");
+  
+    if (storedResult !== null && lastPlayerIndex !== null) {
+      const passed = JSON.parse(storedResult);
+      const playerIndex = JSON.parse(lastPlayerIndex);
+  
+      setCurrentPlayerIndex(playerIndex); // Restore last player's turn
+  
+      setTimeout(() => {
+        setScores((prevScores) => {
+          const updatedScores = { ...prevScores };
+  
+          if (passed) {
+            updatedScores[players[playerIndex]] =
+              (updatedScores[players[playerIndex]] || 0) + 1;
+          }
+  
+          return updatedScores;
+        });
+  
+        setTurnResult(passed ? "Pass" : "Fail");
+        setCanSpin(true);
+        nextTurn();
+      }, 100);
+  
+      console.log("Restored trivia result:", storedResult, "for player index:", playerIndex);
+      console.log("Current scores:", scores);
+      console.log("Current player:", players[playerIndex]);
+  
+      localStorage.removeItem("triviaResult");
+      localStorage.removeItem("lastPlayerIndex");
+    }
+  }, [players]); // Runs only when players are loaded
+  
+  
+  
+  
   const handleSpinResult = (result: boolean, gameOption: string) => {
-  
     console.log("Spin Result:", result, "Game Option:", gameOption);
+    const testingMode = true; // Set to true to force Trivia game
+    // If testing mode is enabled, force game to always be Trivia
+    const finalGameOption = testingMode ? "Trivia" : gameOption;
   
-    if (["Trivia", "Password Game", "Wordle"].includes(gameOption)) {
-    
-      const formattedGameRoute = `/${gameOption.replace(/\s+/g, "")}`; // Remove spaces for URL
+    if (["Trivia", "Password Game", "Wordle"].includes(finalGameOption)) {
+      localStorage.setItem("lastPlayerIndex", JSON.stringify(currentPlayerIndex)); // Store the current player's index
+      const formattedGameRoute = `/${finalGameOption.replace(/\s+/g, "")}`;
       console.log("Navigating to:", formattedGameRoute);
       router.push(formattedGameRoute); // Navigate to the game page
     }
   };
   
+  
+
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
