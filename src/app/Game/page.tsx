@@ -7,10 +7,12 @@ import GameContainer from "../components/GameContainer";
 import { Button } from "@mui/material";
 import dynamic from "next/dynamic";
 
+// Dynamically import Spinner to disable SSR
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
-const SECRET_KEY = "your-secret-key";
+const SECRET_KEY = "your-secret-key"; // Replace with a secure key in production
 
+// Game descriptions mapped to their titles
 const gameDescriptions: { [key: string]: string } = {
   "Finish the Lyric": "Complete the missing lyrics of a song.",
   "Community Shot": "Everyone adds one ingredient into a shot glass and the player must finish it.",
@@ -27,8 +29,11 @@ const gameDescriptions: { [key: string]: string } = {
   "Stand up Comedy": "You must now perform a stand-up comedy act. The others decide if you pass or fail.",
   "Everyone drinks": "Everyone takes a drink.",
 };
+
+// Component to handle search params and decrypt data
 const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   const searchParams = useSearchParams();
+
   useEffect(() => {
     const encryptedData = searchParams.get("data");
     if (!encryptedData) return;
@@ -55,6 +60,7 @@ const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   return null;
 };
 
+// Main Game Component
 const Game = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -66,6 +72,7 @@ const Game = () => {
   const [gameDescription, setGameDescription] = useState("Game Description");
   const [canSpin, setCanSpin] = useState(true);
 
+  // Decrypt data from URL params on component mount
   useEffect(() => {
     const encryptedData = searchParams.get("data");
     if (!encryptedData) return;
@@ -89,6 +96,7 @@ const Game = () => {
     }
   }, [searchParams]);
 
+  // Handle pass action
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
@@ -100,20 +108,26 @@ const Game = () => {
     nextTurn();
   };
 
+  // Handle fail action
   const handleFail = () => {
     setTurnResult("Fail");
     setCanSpin(true);
     nextTurn();
   };
 
+  // Handle spinner result
   const handleSpinResult = (result: boolean, gameOption: string) => {
     if (!canSpin) return;
     console.log("Spin result:", result, gameOption);
-    if (gameOption === "Wordle") {
-      router.push("/wordle");
-    }
-    if (gameOption === "Trivia") {
-      router.push("/Trivia");
+
+    try {
+      if (gameOption === "Wordle") {
+        router.push("/wordle");
+      } else if (gameOption === "Trivia") {
+        router.push("/Trivia");
+      }
+    } catch (error) {
+      console.error("Navigation error:", error);
     }
 
     setGameTitle(gameOption);
@@ -122,6 +136,7 @@ const Game = () => {
     setCanSpin(false);
   };
 
+  // Move to the next player's turn
   const nextTurn = () => {
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
@@ -195,20 +210,14 @@ const Game = () => {
           marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
         }}
       >
-
-        
         {/* Game Container */}
         <div style={{ textAlign: "center" }}>
-        <Suspense>
-          <SearchParamsWrapper setPlayers={setPlayers} setScores={setScores} />
-        </Suspense>
           <GameContainer
             title={gameTitle}
             description={gameDescription}
             onPass={handlePass}
             onFail={handleFail}
           />
-          
         </div>
 
         {/* Current Player */}
