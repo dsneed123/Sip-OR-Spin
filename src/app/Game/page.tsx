@@ -27,6 +27,7 @@ const gameDescriptions: { [key: string]: string } = {
   "Stand up Comedy": "You must now perform a stand-up comedy act. The others decide if you pass or fail.",
   "Everyone drinks": "Everyone takes a drink.",
 };
+
 const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   const searchParams = useSearchParams();
   useEffect(() => {
@@ -56,7 +57,6 @@ const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
 };
 
 const Game = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
@@ -65,29 +65,6 @@ const Game = () => {
   const [gameTitle, setGameTitle] = useState("Game Title");
   const [gameDescription, setGameDescription] = useState("Game Description");
   const [canSpin, setCanSpin] = useState(true);
-
-  useEffect(() => {
-    const encryptedData = searchParams.get("data");
-    if (!encryptedData) return;
-
-    try {
-      const decodedData = decodeURIComponent(encryptedData);
-      const bytes = CryptoJS.AES.decrypt(decodedData, SECRET_KEY);
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-      setPlayers(decryptedData);
-      const initialScores = decryptedData.reduce(
-        (acc: { [key: string]: number }, player: string) => {
-          acc[player] = 0;
-          return acc;
-        },
-        {}
-      );
-      setScores(initialScores);
-    } catch (error) {
-      console.error("Error decrypting data:", error);
-    }
-  }, [searchParams]);
 
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
@@ -104,22 +81,6 @@ const Game = () => {
     setTurnResult("Fail");
     setCanSpin(true);
     nextTurn();
-  };
-
-  const handleSpinResult = (result: boolean, gameOption: string) => {
-    if (!canSpin) return;
-    console.log("Spin result:", result, gameOption);
-    if (gameOption === "Wordle") {
-      router.push("/wordle");
-    }
-    if (gameOption === "Trivia") {
-      router.push("/Trivia");
-    }
-
-    setGameTitle(gameOption);
-    setGameDescription(gameDescriptions[gameOption] || "Game Description");
-    setTurnResult(null);
-    setCanSpin(false);
   };
 
   const nextTurn = () => {
@@ -142,7 +103,6 @@ const Game = () => {
         position: "relative",
       }}
     >
-      {/* Back Button */}
       <Button
         variant="outlined"
         color="primary"
@@ -157,7 +117,6 @@ const Game = () => {
         Back
       </Button>
 
-      {/* Players and Scores */}
       <div
         style={{
           position: "fixed",
@@ -185,8 +144,9 @@ const Game = () => {
         </ul>
       </div>
 
-      {/* Main Content */}
-      <div
+      
+            {/* Main Content */}
+          <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -194,49 +154,50 @@ const Game = () => {
           gap: "1rem",
           marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
         }}
-      >
+      />
 
-        
-        {/* Game Container */}
-        <div style={{ textAlign: "center" }}>
+      
+      
+
+
+      <div style={{ textAlign: "center" }}>
         <Suspense>
           <SearchParamsWrapper setPlayers={setPlayers} setScores={setScores} />
         </Suspense>
-          <GameContainer
-            title={gameTitle}
-            description={gameDescription}
-            onPass={handlePass}
-            onFail={handleFail}
-          />
-          
-        </div>
+      </div>
 
-        {/* Current Player */}
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
-            It&apos;s {players[currentPlayerIndex]}&apos;s Turn
-          </h2>
-          {turnResult && (
-            <h3
-              style={{
-                marginTop: "0.5rem",
-                fontSize: "1.125rem",
-                color: turnResult === "Pass" ? "#48bb78" : "#f56565",
-              }}
-            >
-              {turnResult}
-            </h3>
-          )}
-        </div>
+      <GameContainer
+        title={gameTitle}
+        description={gameDescription}
+        onPass={handlePass}
+        onFail={handleFail}
+      />
 
-        {/* Spinner */}
-        <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
+          It&apos;s {players[currentPlayerIndex]}&apos;s Turn
+        </h2>
+        {turnResult && (
+          <h3
+            style={{
+              marginTop: "0.5rem",
+              fontSize: "1.125rem",
+              color: turnResult === "Pass" ? "#48bb78" : "#f56565",
+            }}
+          >
+            {turnResult}
+          </h3>
+        )}
+      </div>
+
+      <div style={{ textAlign: "center" }}>
+       
           <Spinner
             data={Object.keys(gameDescriptions).map((option) => ({ option }))}
-            onSpin={handleSpinResult}
+            onSpin={() => {}}
             players={players}
           />
-        </div>
+       
       </div>
     </div>
   );
