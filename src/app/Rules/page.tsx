@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 const rules = () => {
     return (
         <>
@@ -12,7 +12,7 @@ const rules = () => {
                             <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
                         </div>
                     </div>
-                    <div className="absolute bottom-30 top--5 right-0">
+                    <div className="absolute bottom-30 top--5 right-0 max-sm:bg-blue-500">
                         <img className="w-40" src={'../cup.png'} alt="Solo cup"/>
                     </div>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
