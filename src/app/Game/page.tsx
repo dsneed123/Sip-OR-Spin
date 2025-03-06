@@ -30,7 +30,9 @@ const gameDescriptions: { [key: string]: string } = {
   "Everyone drinks": "Everyone takes a drink.",
 };
 
+
 // Component to handle search params and decrypt data
+ main
 const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   const searchParams = useSearchParams();
 
@@ -62,7 +64,6 @@ const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
 
 // Main Game Component
 const Game = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
   const [scores, setScores] = useState<{ [key: string]: number }>({});
@@ -71,6 +72,7 @@ const Game = () => {
   const [gameTitle, setGameTitle] = useState("Game Title");
   const [gameDescription, setGameDescription] = useState("Game Description");
   const [canSpin, setCanSpin] = useState(true);
+
 
   // Decrypt data from URL params on component mount
   useEffect(() => {
@@ -97,6 +99,7 @@ const Game = () => {
   }, [searchParams]);
 
   // Handle pass action
+ main
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
@@ -114,6 +117,7 @@ const Game = () => {
     setCanSpin(true);
     nextTurn();
   };
+
 
   // Handle spinner result
   const handleSpinResult = (result: boolean, gameOption: string) => {
@@ -137,6 +141,7 @@ const Game = () => {
   };
 
   // Move to the next player's turn
+ main
   const nextTurn = () => {
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
@@ -157,7 +162,6 @@ const Game = () => {
         position: "relative",
       }}
     >
-      {/* Back Button */}
       <Button
         variant="outlined"
         color="primary"
@@ -172,7 +176,6 @@ const Game = () => {
         Back
       </Button>
 
-      {/* Players and Scores */}
       <div
         style={{
           position: "fixed",
@@ -200,8 +203,9 @@ const Game = () => {
         </ul>
       </div>
 
-      {/* Main Content */}
-      <div
+      
+            {/* Main Content */}
+          <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -209,6 +213,7 @@ const Game = () => {
           gap: "1rem",
           marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
         }}
+
       >
         {/* Game Container */}
         <div style={{ textAlign: "center" }}>
@@ -237,15 +242,52 @@ const Game = () => {
             </h3>
           )}
         </div>
+=======
+      />
 
-        {/* Spinner */}
-        <div style={{ textAlign: "center" }}>
+      
+      
+
+
+      <div style={{ textAlign: "center" }}>
+        <Suspense>
+          <SearchParamsWrapper setPlayers={setPlayers} setScores={setScores} />
+        </Suspense>
+      </div>
+
+      <GameContainer
+        title={gameTitle}
+        description={gameDescription}
+        onPass={handlePass}
+        onFail={handleFail}
+      />
+
+      <div style={{ textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
+          It&apos;s {players[currentPlayerIndex]}&apos;s Turn
+        </h2>
+        {turnResult && (
+          <h3
+            style={{
+              marginTop: "0.5rem",
+              fontSize: "1.125rem",
+              color: turnResult === "Pass" ? "#48bb78" : "#f56565",
+            }}
+          >
+            {turnResult}
+          </h3>
+        )}
+      </div>
+
+
+      <div style={{ textAlign: "center" }}>
+       
           <Spinner
             data={Object.keys(gameDescriptions).map((option) => ({ option }))}
-            onSpin={handleSpinResult}
+            onSpin={() => {}}
             players={players}
           />
-        </div>
+       
       </div>
     </div>
   );
