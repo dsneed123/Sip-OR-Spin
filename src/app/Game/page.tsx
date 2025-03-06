@@ -7,12 +7,10 @@ import GameContainer from "../components/GameContainer";
 import { Button } from "@mui/material";
 import dynamic from "next/dynamic";
 
-// Dynamically import Spinner to disable SSR
 const Spinner = dynamic(() => import("../components/Spinner"), { ssr: false });
 
-const SECRET_KEY = "your-secret-key"; // Replace with a secure key in production
+const SECRET_KEY = "your-secret-key";
 
-// Game descriptions mapped to their titles
 const gameDescriptions: { [key: string]: string } = {
   "Finish the Lyric": "Complete the missing lyrics of a song.",
   "Community Shot": "Everyone adds one ingredient into a shot glass and the player must finish it.",
@@ -30,12 +28,8 @@ const gameDescriptions: { [key: string]: string } = {
   "Everyone drinks": "Everyone takes a drink.",
 };
 
-
-// Component to handle search params and decrypt data
- main
 const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   const searchParams = useSearchParams();
-
   useEffect(() => {
     const encryptedData = searchParams.get("data");
     if (!encryptedData) return;
@@ -62,7 +56,6 @@ const SearchParamsWrapper = ({ setPlayers, setScores }: any) => {
   return null;
 };
 
-// Main Game Component
 const Game = () => {
   const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
@@ -73,33 +66,6 @@ const Game = () => {
   const [gameDescription, setGameDescription] = useState("Game Description");
   const [canSpin, setCanSpin] = useState(true);
 
-
-  // Decrypt data from URL params on component mount
-  useEffect(() => {
-    const encryptedData = searchParams.get("data");
-    if (!encryptedData) return;
-
-    try {
-      const decodedData = decodeURIComponent(encryptedData);
-      const bytes = CryptoJS.AES.decrypt(decodedData, SECRET_KEY);
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-      setPlayers(decryptedData);
-      const initialScores = decryptedData.reduce(
-        (acc: { [key: string]: number }, player: string) => {
-          acc[player] = 0;
-          return acc;
-        },
-        {}
-      );
-      setScores(initialScores);
-    } catch (error) {
-      console.error("Error decrypting data:", error);
-    }
-  }, [searchParams]);
-
-  // Handle pass action
- main
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
     setScores((prevScores) => ({
@@ -111,37 +77,12 @@ const Game = () => {
     nextTurn();
   };
 
-  // Handle fail action
   const handleFail = () => {
     setTurnResult("Fail");
     setCanSpin(true);
     nextTurn();
   };
 
-
-  // Handle spinner result
-  const handleSpinResult = (result: boolean, gameOption: string) => {
-    if (!canSpin) return;
-    console.log("Spin result:", result, gameOption);
-
-    try {
-      if (gameOption === "Wordle") {
-        router.push("/wordle");
-      } else if (gameOption === "Trivia") {
-        router.push("/Trivia");
-      }
-    } catch (error) {
-      console.error("Navigation error:", error);
-    }
-
-    setGameTitle(gameOption);
-    setGameDescription(gameDescriptions[gameOption] || "Game Description");
-    setTurnResult(null);
-    setCanSpin(false);
-  };
-
-  // Move to the next player's turn
- main
   const nextTurn = () => {
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
@@ -213,36 +154,6 @@ const Game = () => {
           gap: "1rem",
           marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
         }}
-
-      >
-        {/* Game Container */}
-        <div style={{ textAlign: "center" }}>
-          <GameContainer
-            title={gameTitle}
-            description={gameDescription}
-            onPass={handlePass}
-            onFail={handleFail}
-          />
-        </div>
-
-        {/* Current Player */}
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
-            It&apos;s {players[currentPlayerIndex]}&apos;s Turn
-          </h2>
-          {turnResult && (
-            <h3
-              style={{
-                marginTop: "0.5rem",
-                fontSize: "1.125rem",
-                color: turnResult === "Pass" ? "#48bb78" : "#f56565",
-              }}
-            >
-              {turnResult}
-            </h3>
-          )}
-        </div>
-=======
       />
 
       
@@ -278,7 +189,6 @@ const Game = () => {
           </h3>
         )}
       </div>
-
 
       <div style={{ textAlign: "center" }}>
        
