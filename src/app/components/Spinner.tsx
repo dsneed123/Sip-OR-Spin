@@ -49,6 +49,7 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
 
       {/* Wheel Container */}
       <div className="w-full max-w-md flex justify-center" style={{ height: "60vh" }}>
+       
         <Wheel
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
@@ -64,7 +65,9 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
           textDistance={60} // Adjusted text distance
           spinDuration={0.5}
           perpendicularText={false} // Ensure text remains horizontal
+          
         />
+       
       </div>
     </div>
   );

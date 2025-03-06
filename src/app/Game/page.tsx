@@ -143,6 +143,7 @@ const Game = () => {
           ))}
         </ul>
       </div>
+
       
             {/* Main Content */}
           <div
@@ -157,6 +158,7 @@ const Game = () => {
 
       
       
+
 
       <div style={{ textAlign: "center" }}>
         <Suspense>
