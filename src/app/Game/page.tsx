@@ -144,6 +144,22 @@ const Game = () => {
         </ul>
       </div>
 
+      
+            {/* Main Content */}
+          <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "1rem",
+          marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
+        }}
+      />
+
+      
+      
+
+
       <div style={{ textAlign: "center" }}>
         <Suspense>
           <SearchParamsWrapper setPlayers={setPlayers} setScores={setScores} />
