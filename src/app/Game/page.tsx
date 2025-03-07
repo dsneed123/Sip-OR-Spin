@@ -83,6 +83,23 @@ const Game = () => {
     nextTurn();
   };
 
+  const handleSpinResult = (result: boolean, gameOption: string) => {
+    if (!canSpin) return;
+    console.log("Spin result:", result, gameOption);
+    if (gameOption === "Wordle") {
+      router.push("/wordle");
+    }
+    if (gameOption === "Trivia") {
+      router.push("/Trivia");
+    }
+
+    setGameTitle(gameOption);
+    setGameDescription(gameDescriptions[gameOption] || "Game Description");
+    setTurnResult(null);
+    setCanSpin(false);
+  };
+
+
   const nextTurn = () => {
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
@@ -144,6 +161,17 @@ const Game = () => {
         </ul>
       </div>
 
+                  {/* Main Content */}
+                  <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "1rem",
+          marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
+        }}
+      />
+
       <div style={{ textAlign: "center" }}>
         <Suspense>
           <SearchParamsWrapper setPlayers={setPlayers} setScores={setScores} />
@@ -175,13 +203,11 @@ const Game = () => {
       </div>
 
       <div style={{ textAlign: "center" }}>
-       
-          <Spinner
-            data={Object.keys(gameDescriptions).map((option) => ({ option }))}
-            onSpin={() => {}}
-            players={players}
-          />
-       
+        <Spinner
+          data={Object.keys(gameDescriptions).map((option) => ({ option }))}
+          onSpin={handleSpinResult}
+          players={players}
+        />
       </div>
     </div>
   );
