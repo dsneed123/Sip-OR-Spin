@@ -12,7 +12,6 @@ export default function CreateGame() {
   const router = useRouter();
   const [playerNames, setPlayerNames] = useState<string[]>([""]); // Start with one empty input
   const [rounds, setRounds] = useState<number>(3);
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
 
   const handlePlayerChange = (index: number, name: string) => {
     const newPlayerNames = [...playerNames];
@@ -50,18 +49,14 @@ export default function CreateGame() {
       return;
     }
 
-    setLoading(true); // Show loading state
+    // Encrypt the player names
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(validPlayers), SECRET_KEY).toString();
 
-    // Simulate a delay for starting the game
-    setTimeout(() => {
-      // Encrypt the player names
-      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(validPlayers), SECRET_KEY).toString();
+    // Encode the encrypted string to be URL safe
+    const encodedData = encodeURIComponent(encryptedData);
 
-      // Encode the encrypted string to be URL safe
-      const encodedData = encodeURIComponent(encryptedData);
-
-      router.push(`/Game?data=${encodedData}`);
-    }, 1000); // 1-second delay
+    // Navigate to the game page
+    router.push(`/Game?data=${encodedData}`);
   };
 
   return (
@@ -155,7 +150,7 @@ export default function CreateGame() {
                 fullWidth
                 variant="contained"
                 onClick={handleStartGame}
-                disabled={!playerNames.some((name) => name.trim() !== "") || loading}
+                disabled={!playerNames.some((name) => name.trim() !== "")}
                 size="large"
                 sx={{
                   mt: 3,
@@ -165,7 +160,7 @@ export default function CreateGame() {
                   py: 1.5,
                 }}
               >
-                {loading ? "Starting Game..." : "Start Game"}
+                Start Game
               </Button>
             </Grid>
           </Grid>
