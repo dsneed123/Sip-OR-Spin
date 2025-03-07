@@ -64,7 +64,8 @@ const Game = () => {
   const [turnResult, setTurnResult] = useState<null | string>(null);
   const [gameTitle, setGameTitle] = useState("Game Title");
   const [gameDescription, setGameDescription] = useState("Game Description");
-  const [canSpin, setCanSpin] = useState(true);
+  const [canSpin, setCanSpin] = useState(true); // Enable spin at the start
+  const [canPassFail, setCanPassFail] = useState(false); // Disable Pass/Fail buttons initially
 
   const handlePass = () => {
     const currentPlayer = players[currentPlayerIndex];
@@ -73,13 +74,17 @@ const Game = () => {
       [currentPlayer]: prevScores[currentPlayer] + 1,
     }));
     setTurnResult("Pass");
-    setCanSpin(true);
+    setCanPassFail(false); // Disable Pass/Fail buttons
+    setCanSpin(true); // Enable spin for the next player
+    setTimeout(() => setTurnResult(null), 2000); // Clear result after 2 seconds
     nextTurn();
   };
 
   const handleFail = () => {
     setTurnResult("Fail");
-    setCanSpin(true);
+    setCanPassFail(false); // Disable Pass/Fail buttons
+    setCanSpin(true); // Enable spin for the next player
+    setTimeout(() => setTurnResult(null), 2000); // Clear result after 2 seconds
     nextTurn();
   };
 
@@ -92,13 +97,16 @@ const Game = () => {
     if (gameOption === "Trivia") {
       router.push("/Trivia");
     }
+    if (gameOption === "Password Game") {
+      router.push("/PasswordGame");
+    }
 
     setGameTitle(gameOption);
     setGameDescription(gameDescriptions[gameOption] || "Game Description");
     setTurnResult(null);
-    setCanSpin(false);
+    setCanSpin(false); // Disable spin after spinning
+    setCanPassFail(true); // Enable Pass/Fail buttons after spinning
   };
-
 
   const nextTurn = () => {
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
@@ -161,54 +169,67 @@ const Game = () => {
         </ul>
       </div>
 
-                  {/* Main Content */}
-                  <div
+      {/* Main Content */}
+      <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "1rem",
-          marginTop: "15em", // Add space at the top to avoid overlap with fixed elements
+          marginTop: "15rem", // Add space at the top to avoid overlap with fixed elements
         }}
-      />
-
-      <div style={{ textAlign: "center" }}>
+      >
         <Suspense>
           <SearchParamsWrapper setPlayers={setPlayers} setScores={setScores} />
         </Suspense>
-      </div>
 
-      <GameContainer
-        title={gameTitle}
-        description={gameDescription}
-        onPass={handlePass}
-        onFail={handleFail}
-      />
-
-      <div style={{ textAlign: "center" }}>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
-          It&apos;s {players[currentPlayerIndex]}&apos;s Turn
-        </h2>
-        {turnResult && (
-          <h3
-            style={{
-              marginTop: "0.5rem",
-              fontSize: "1.125rem",
-              color: turnResult === "Pass" ? "#48bb78" : "#f56565",
-            }}
-          >
-            {turnResult}
-          </h3>
-        )}
-      </div>
-
-      <div style={{ textAlign: "center" }}>
-        <Spinner
-          data={Object.keys(gameDescriptions).map((option) => ({ option }))}
-          onSpin={handleSpinResult}
-          players={players}
+        <GameContainer
+          title={gameTitle}
+          description={gameDescription}
+          onPass={handlePass}
+          onFail={handleFail}
+          canPassFail={canPassFail} // Pass canPassFail state to GameContainer
         />
+
+        <div style={{ textAlign: "center", height: "3rem" }}>
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>
+            It&apos;s {players[currentPlayerIndex]}&apos;s Turn
+          </h2>
+          {turnResult && (
+            <h3
+              style={{
+                marginTop: "0.5rem",
+                fontSize: "1.125rem",
+                color: turnResult === "Pass" ? "#48bb78" : "#f56565",
+                animation: "fadeInOut 2s ease-in-out",
+              }}
+            >
+              {turnResult}
+            </h3>
+          )}
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <Spinner
+            data={Object.keys(gameDescriptions).map((option) => ({ option }))}
+            onSpin={handleSpinResult}
+            players={players}
+            disabled={!canSpin} // Disable spinner based on canSpin state
+          />
+        </div>
       </div>
+
+      {/* CSS for fade-in-out animation */}
+      <style>
+        {`
+          @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+          }
+        `}
+      </style>
     </div>
   );
 };

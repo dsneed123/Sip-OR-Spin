@@ -5,6 +5,7 @@ interface GameContainerProps {
   description: string;
   onPass: () => void;
   onFail: () => void;
+  canPassFail: boolean; // Add canPassFail to the props
 }
 
 const GameContainer: React.FC<GameContainerProps> = ({
@@ -12,6 +13,7 @@ const GameContainer: React.FC<GameContainerProps> = ({
   description,
   onPass,
   onFail,
+  canPassFail, // Destructure canPassFail from props
 }) => {
   return (
     <div style={{ textAlign: "center" }}>
@@ -24,30 +26,32 @@ const GameContainer: React.FC<GameContainerProps> = ({
       <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
         <button
           onClick={onPass}
+          disabled={!canPassFail} // Disable Pass button based on canPassFail
           style={{
             padding: "0.5rem 1rem",
             fontSize: "1rem",
             fontWeight: 600,
-            backgroundColor: "#48bb78",
+            backgroundColor: canPassFail ? "#48bb78" : "#a0aec0", // Change color when disabled
             color: "#ffffff",
             border: "none",
             borderRadius: "0.5rem",
-            cursor: "pointer",
+            cursor: canPassFail ? "pointer" : "not-allowed", // Change cursor when disabled
           }}
         >
           Pass
         </button>
         <button
           onClick={onFail}
+          disabled={!canPassFail} // Disable Fail button based on canPassFail
           style={{
             padding: "0.5rem 1rem",
             fontSize: "1rem",
             fontWeight: 600,
-            backgroundColor: "#f56565",
+            backgroundColor: canPassFail ? "#f56565" : "#a0aec0", // Change color when disabled
             color: "#ffffff",
             border: "none",
             borderRadius: "0.5rem",
-            cursor: "pointer",
+            cursor: canPassFail ? "pointer" : "not-allowed", // Change cursor when disabled
           }}
         >
           Fail
