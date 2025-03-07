@@ -91,7 +91,7 @@ const Game = () => {
   const handleSpinResult = (result: boolean, gameOption: string) => {
     if (!canSpin) return;
     console.log("Spin result:", result, gameOption);
-    if (gameOption === "Wordle") {
+    if (gameOption === "Wordl") {
       router.push("/Wordle");
     }
     if (gameOption === "Trivia") {
