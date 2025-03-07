@@ -2,22 +2,25 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import CryptoJS from "crypto-js";
-import { Button, TextField, Card, Grid, Container, Typography, Box, Slider } from "@mui/material";
+import { Button, TextField, Card, Grid, Container, Typography, Box, Slider, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete"; // Import delete icon
 
 const SECRET_KEY = "your-secret-key"; // Use a secure key in production
+const MAX_PLAYERS = 10; // Maximum number of players
 
 export default function CreateGame() {
   const router = useRouter();
   const [playerNames, setPlayerNames] = useState<string[]>([""]); // Start with one empty input
   const [rounds, setRounds] = useState<number>(3);
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
 
   const handlePlayerChange = (index: number, name: string) => {
     const newPlayerNames = [...playerNames];
     newPlayerNames[index] = name;
     setPlayerNames(newPlayerNames);
 
-    // Add a new empty input if the last input is filled
-    if (index === playerNames.length - 1 && name.trim() !== "") {
+    // Add a new empty input if the last input is filled and the max limit is not reached
+    if (index === playerNames.length - 1 && name.trim() !== "" && playerNames.length < MAX_PLAYERS) {
       setPlayerNames([...newPlayerNames, ""]);
     }
 
@@ -28,6 +31,11 @@ export default function CreateGame() {
       );
       setPlayerNames(filteredPlayerNames);
     }
+  };
+
+  const handleRemovePlayer = (index: number) => {
+    const newPlayerNames = playerNames.filter((_, i) => i !== index);
+    setPlayerNames(newPlayerNames);
   };
 
   const handleRoundsChange = (event: Event, newValue: number | number[]) => {
@@ -42,13 +50,18 @@ export default function CreateGame() {
       return;
     }
 
-    // Encrypt the player names
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(validPlayers), SECRET_KEY).toString();
+    setLoading(true); // Show loading state
 
-    // Encode the encrypted string to be URL safe
-    const encodedData = encodeURIComponent(encryptedData);
+    // Simulate a delay for starting the game
+    setTimeout(() => {
+      // Encrypt the player names
+      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(validPlayers), SECRET_KEY).toString();
 
-    router.push(`/Game?data=${encodedData}`);
+      // Encode the encrypted string to be URL safe
+      const encodedData = encodeURIComponent(encryptedData);
+
+      router.push(`/Game?data=${encodedData}`);
+    }, 1000); // 1-second delay
   };
 
   return (
@@ -75,13 +88,13 @@ export default function CreateGame() {
             <Grid item xs={12}>
               <Box sx={{ mb: 2 }}>
                 <Typography variant="subtitle1" component="p" color="#ccc">
-                  Players
+                  Players (Max {MAX_PLAYERS})
                 </Typography>
               </Box>
 
               {playerNames.map((name, index) => (
                 <Grid key={index} container alignItems="center" sx={{ mb: 2 }}>
-                  <Grid item xs={12}>
+                  <Grid item xs={10}>
                     <TextField
                       fullWidth
                       label={`Player ${index + 1}`}
@@ -99,6 +112,13 @@ export default function CreateGame() {
                       }}
                     />
                   </Grid>
+                  {index !== playerNames.length - 1 && (
+                    <Grid item xs={2}>
+                      <IconButton onClick={() => handleRemovePlayer(index)}>
+                        <DeleteIcon sx={{ color: "#ff4444" }} />
+                      </IconButton>
+                    </Grid>
+                  )}
                 </Grid>
               ))}
             </Grid>
@@ -109,19 +129,21 @@ export default function CreateGame() {
                 <Typography variant="subtitle1" component="p" color="#ccc">
                   Number of Rounds
                 </Typography>
-                <Slider
-                  value={rounds}
-                  onChange={handleRoundsChange}
-                  min={1}
-                  max={10}
-                  size="small"
-                  sx={{
-                    color: "#fff",
-                    "& .MuiSlider-thumb": { backgroundColor: "#fff" },
-                    "& .MuiSlider-track": { backgroundColor: "#404040" },
-                  }}
-                />
-                <Typography variant="body2" component="span" color="#ccc">
+                <Box sx={{ width: "100%", maxWidth: "400px", mx: "auto" }}> {/* Adjusted slider width */}
+                  <Slider
+                    value={rounds}
+                    onChange={handleRoundsChange}
+                    min={1}
+                    max={10}
+                    size="small"
+                    sx={{
+                      color: "#fff",
+                      "& .MuiSlider-thumb": { backgroundColor: "#fff" },
+                      "& .MuiSlider-track": { backgroundColor: "#404040" },
+                    }}
+                  />
+                </Box>
+                <Typography variant="body2" component="span" color="#ccc" align="center" display="block">
                   {rounds} round{rounds !== 1 ? "s" : ""}
                 </Typography>
               </Box>
@@ -133,7 +155,7 @@ export default function CreateGame() {
                 fullWidth
                 variant="contained"
                 onClick={handleStartGame}
-                disabled={!playerNames.some((name) => name.trim() !== "")}
+                disabled={!playerNames.some((name) => name.trim() !== "") || loading}
                 size="large"
                 sx={{
                   mt: 3,
@@ -143,7 +165,7 @@ export default function CreateGame() {
                   py: 1.5,
                 }}
               >
-                Start Game
+                {loading ? "Starting Game..." : "Start Game"}
               </Button>
             </Grid>
           </Grid>
