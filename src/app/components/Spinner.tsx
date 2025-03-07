@@ -6,16 +6,17 @@ interface SpinnerProps {
   data: { option: string }[];
   onSpin: (result: boolean, gameOption: string) => void;
   players: string[];
+  disabled?: boolean; // Add the disabled prop
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
+const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players, disabled }) => {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [scores, setScores] = useState(Array(players.length).fill(0));
 
   const handleSpinClick = () => {
-    if (!mustSpin) {
+    if (!mustSpin && !disabled) { // Check if disabled
       const newPrizeNumber = Math.floor(Math.random() * data.length);
       setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
@@ -41,15 +42,18 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
       {/* Spin Button */}
       <button
         onClick={handleSpinClick}
-        disabled={mustSpin}
-        className="px-8 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed mb-4"
+        disabled={mustSpin || disabled} // Disable if spinning or disabled prop is true
+        className={`px-8 py-3 text-lg font-semibold text-white rounded-lg shadow-lg transition-colors duration-300 mb-4 ${
+          mustSpin || disabled
+            ? "bg-gray-500 cursor-not-allowed" // Disabled state
+            : "bg-blue-600 hover:bg-blue-700" // Enabled state
+        }`}
       >
         {mustSpin ? "Spinning..." : "SPIN"}
       </button>
 
       {/* Wheel Container */}
       <div className="w-full max-w-md flex justify-center" style={{ height: "60vh" }}>
-       
         <Wheel
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
@@ -65,9 +69,7 @@ const Spinner: React.FC<SpinnerProps> = ({ data, onSpin, players }) => {
           textDistance={60} // Adjusted text distance
           spinDuration={0.5}
           perpendicularText={false} // Ensure text remains horizontal
-          
         />
-       
       </div>
     </div>
   );
