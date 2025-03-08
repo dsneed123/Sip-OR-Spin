@@ -8,7 +8,7 @@ interface Song {
   correctContinuation: string;
 }
 
-const GENIUS_API_TOKEN = 'Z4ZzNvqsdkz6iSSLkN-NUBUYZe41g3fYfWzfhN40vIH9OPGbYujkBVZrLnlZ7J0W'; // Replace with your Genius API token
+const GENIUS_API_TOKEN = 'tht10d4bHrIWneyAK_k0kay_4T8MU4It8Emwot6mHXI2XVsZW8ar8OeZ8ae1BBrE'; 
 
 const GuessTheLyrics = () => {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
