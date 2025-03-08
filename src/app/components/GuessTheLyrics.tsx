@@ -1,14 +1,14 @@
 // components/GuessTheLyrics.tsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import cheerio from 'cheerio'; // For parsing HTML lyrics
+import * as cheerio from 'cheerio';
 
 interface Song {
   startingLyrics: string;
   correctContinuation: string;
 }
 
-const GENIUS_API_TOKEN = 'tht10d4bHrIWneyAK_k0kay_4T8MU4It8Emwot6mHXI2XVsZW8ar8OeZ8ae1BBrE'; 
+const GENIUS_API_TOKEN = 'TN_Hvv5Ho2WlDvKEfuqEWVR7NHkvCSBjv3CeIHmZyiePJ4emaJhUKkyb5YdGvlO2'; // Replace with your Genius API token
 
 const GuessTheLyrics = () => {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
@@ -27,9 +27,19 @@ const GuessTheLyrics = () => {
       const response = await axios.get(songUrl);
       const $ = cheerio.load(response.data);
 
-      // Extract lyrics from the page (Genius stores lyrics in a div with class "lyrics")
-      const lyrics = $('.lyrics').text().trim();
-      return lyrics;
+      // Updated selector for lyrics (as of October 2023)
+      const lyricsContainer = $('[data-lyrics-container="true"]');
+      if (!lyricsContainer.length) {
+        throw new Error('Lyrics container not found');
+      }
+
+      // Extract and clean the lyrics
+      let lyrics = '';
+      lyricsContainer.each((i, el) => {
+        lyrics += $(el).text().trim() + '\n';
+      });
+
+      return lyrics.trim();
     } catch (error) {
       console.error('Error fetching lyrics:', error);
       return null;
@@ -40,17 +50,22 @@ const GuessTheLyrics = () => {
   const fetchRandomSong = async () => {
     setLoading(true);
     try {
-      // Step 1: Search for a random song
+      // Step 1: Fetch popular songs from the Genius API
       const searchResponse = await axios.get(`https://api.genius.com/search?q=popular`, {
         headers: {
           Authorization: `Bearer ${GENIUS_API_TOKEN}`,
         },
       });
 
+      console.log('Search Response:', searchResponse.data); // Debug: Check the search results
+
       // Step 2: Pick a random song from the search results
       const randomSong =
         searchResponse.data.response.hits[Math.floor(Math.random() * searchResponse.data.response.hits.length)].result;
       const songUrl = randomSong.url;
+
+      console.log('Selected Song:', randomSong); // Debug: Check the selected song
+      console.log('Song URL:', songUrl); // Debug: Check the song URL
 
       // Step 3: Fetch the lyrics from the Genius page
       const lyrics = await fetchLyrics(songUrl);
@@ -58,6 +73,8 @@ const GuessTheLyrics = () => {
       if (!lyrics) {
         throw new Error('Failed to fetch lyrics');
       }
+
+      console.log('Lyrics:', lyrics); // Debug: Check the fetched lyrics
 
       // Step 4: Parse lyrics into lines
       const lines = lyrics.split('\n').filter((line) => line.trim() !== '');
