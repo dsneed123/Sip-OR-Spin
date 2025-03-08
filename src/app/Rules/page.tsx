@@ -8,11 +8,9 @@ const rules = () => {
             <div className="flex flex-col gap-10.25 items-center">
                 <div className="bg-[#FFECDC] rounded-3xl w-9/10 relative p-6 border-2">
                     <div>
-                        <div>
-                            <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
-                        </div>
+                        <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
                     </div>
-                    <div className="absolute bottom-30 top--5 right-0 max-xs: bg-blue-400 absolute max-sm: absolute bottom-30 top--5">
+                    <div className="absolute bottom-30 top--5 right-0 bg-yellow-50 max-xs: bg-pink-400 max-sm: absolute bottom-30 top--5 bg-purple-300">
                         <img className="w-40" src={'../cup.png'} alt="Solo cup"/>
                     </div>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
