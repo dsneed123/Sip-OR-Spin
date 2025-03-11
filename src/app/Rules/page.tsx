@@ -10,7 +10,7 @@ const rules = () => {
                     <div>
                         <h2 className="text-center font-semibold text-2xl overflow-auto whitespace-nowrap pb-2">Game Rules</h2>
                     </div>
-                    <div className="sm:absolute sm:bottom-37 sm:bg-yellow-300 md:absolute md:bottom-30 md:top--5 md:bg-purple-300 absolute bottom-30 top--5 right-0 bg-pink-400">
+                    <div className="xs:bg-orange-500 xs:absolute sm:absolute sm:-top-15 sm:bg-yellow-300 md:absolute md:-top-15 md:bg-purple-300 absolute -top-15 right-0 bg-pink-400">
                         <img className="w-40" src={'../cup.png'} alt="Solo cup"/>
                     </div>
                     <li>Who goes first? - The player with the longest hair spins first.</li>
